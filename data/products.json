@@ -58,7 +58,7 @@
     "category": "Retail Packaging",
     "description": "Classic carry bags in W-cut and U-cut styles. Strong, certified, and compostable.",
     "image": "/uploads/compostablewcutcarrybag-500x500-1775759908828.jpg",
-    "featured": false,
+    "featured": true,
     "longDescription": "<p>At Packin Club, we design compostable carry bags that combine everyday functionality with real-world eco-impact. Unlike traditional plastic bags that persist for centuries, our carry bags fully decompose within months under composting conditions — leaving no toxic residues.</p><p>Whether you need W-cut bags for standard retail carry or U-cut bags for groceries and takeaways, Packin Club offers flexible, certified, and premium-quality compostable solutions.</p><p>Our bags are CPCB certified, tested by CIPET, and manufactured following ISO 17088 guidelines, ensuring regulatory compliance and a trustworthy sustainable image for your business. Available in multiple sizes, these bags are lightweight yet durable, making them ideal for a variety of business applications — from small boutiques to supermarkets and food delivery services.</p>",
     "keyFeatures": [
       "Made from renewable, plant-based materials",
@@ -92,6 +92,11 @@
         "question": "Are both W-cut and U-cut bags available in all sizes?",
         "answer": "Yes, both designs can be customized across different sizes based on your requirements."
       }
+    ],
+    "gallery": [
+      "/uploads/compostablecarrybagucut-500x750-1775763444189.jpg",
+      "/uploads/compostablebagsatgroceryshops-500x333-1775763452449.jpg",
+      "/uploads/compostablecarrybag-500x500-1775763466401.jpg"
     ]
   },
   {

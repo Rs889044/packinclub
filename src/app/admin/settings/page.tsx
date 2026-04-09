@@ -130,6 +130,24 @@ export default function SettingsPage() {
           <div className="grid sm:grid-cols-2 gap-6">
             {renderUploadBox("Favicon (Browser Tab Icon)", "favicon")}
           </div>
+
+          <label className="flex items-center gap-4 cursor-pointer mt-6 p-4 border border-brand-pale rounded-xl bg-brand-sand/30 hover:bg-brand-sand/50 transition-colors">
+            <div className="relative">
+              <input
+                type="checkbox"
+                checked={settings.enableWhatsApp}
+                onChange={(e) => setSettings({ ...settings, enableWhatsApp: e.target.checked })}
+                className="sr-only"
+              />
+              <div className={`w-11 h-6 rounded-full transition-colors ${settings.enableWhatsApp ? "bg-brand-forest" : "bg-brand-pale"}`}>
+                <div className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform mt-0.5 ${settings.enableWhatsApp ? "translate-x-[22px]" : "translate-x-0.5"}`} />
+              </div>
+            </div>
+            <div>
+              <span className="block text-sm font-semibold text-brand-charcoal">Enable Floating WhatsApp Chat</span>
+              <span className="block text-xs text-brand-gray mt-0.5">Show the sticky WhatsApp contact button across all public pages.</span>
+            </div>
+          </label>
         </div>
 
         {/* Home Page Sections */}

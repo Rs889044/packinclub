@@ -10,6 +10,7 @@ const settingsFile = path.join(dataDir, "settings.json");
 
 const defaultSettings: SiteSettings = {
   favicon: "",
+  enableWhatsApp: false,
   whoWeAreImage: "",
   productLifeCycleImage: "",
   whyChooseUsImages: ["", "", "", "", "", ""]

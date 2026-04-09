@@ -38,6 +38,7 @@ export interface Contact {
 
 export interface SiteSettings {
   favicon: string;
+  enableWhatsApp: boolean;
   whoWeAreImage: string;
   productLifeCycleImage: string;
   whyChooseUsImages: string[];

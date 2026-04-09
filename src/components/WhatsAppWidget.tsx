@@ -5,9 +5,19 @@ export default function WhatsAppWidget() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Slight delay to fade in so it's not jarring on initial fast paint
-    const timer = setTimeout(() => setIsVisible(true), 500);
-    return () => clearTimeout(timer);
+    let timer: NodeJS.Timeout;
+    fetch("/api/admin/settings")
+      .then(res => res.json())
+      .then(data => {
+        if (data.enableWhatsApp) {
+          timer = setTimeout(() => setIsVisible(true), 500);
+        }
+      })
+      .catch(() => {});
+      
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, []);
 
   return (

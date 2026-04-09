@@ -3,7 +3,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ProductGalleryProps {
-  image: string;
+  image?: string;
   gallery?: string[];
   name: string;
 }

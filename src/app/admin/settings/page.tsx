@@ -136,7 +136,7 @@ export default function SettingsPage() {
           <h2 className="font-display text-lg font-bold text-brand-charcoal border-b border-brand-pale pb-4">Home Page Overrides</h2>
           
           <div>
-            <h3 className="text-sm font-semibold text-brand-charcoal mb-4">"Who We Are" Image</h3>
+            <h3 className="text-sm font-semibold text-brand-charcoal mb-4">&quot;Who We Are&quot; Image</h3>
             <p className="text-xs text-brand-gray mb-4">Replaces the default 🌱 emoji box on the homepage.</p>
             <div className="max-w-sm">
               {renderUploadBox("Featured Image", "whoWeAreImage")}
@@ -144,7 +144,7 @@ export default function SettingsPage() {
           </div>
 
           <div className="pt-6 border-t border-brand-pale">
-            <h3 className="text-sm font-semibold text-brand-charcoal mb-4">"Why Choose Us" Card Images</h3>
+            <h3 className="text-sm font-semibold text-brand-charcoal mb-4">&quot;Why Choose Us&quot; Card Images</h3>
             <p className="text-xs text-brand-gray mb-4">Upload custom images/icons for the 6 feature cards.</p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {renderUploadBox("Card 1 (Plant-Based)", "whyChooseUsImages", 0)}

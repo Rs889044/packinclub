@@ -252,6 +252,44 @@ export default function NewProductPage() {
             )}
           </div>
 
+          {/* Gallery Upload */}
+          <div className="pt-6 border-t border-brand-pale">
+            <div className="flex items-center justify-between mb-2">
+              <div>
+                <label className="block text-sm font-medium text-brand-charcoal">Gallery Images</label>
+                <p className="text-xs text-brand-gray mt-0.5">Add up to 4 additional images for the product gallery.</p>
+              </div>
+              <span className="text-xs font-semibold text-brand-gray">{gallery.length} / 4</span>
+            </div>
+            
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 mb-6">
+              {gallery.map((url, idx) => (
+                <div key={idx} className="relative aspect-square rounded-xl overflow-hidden border border-brand-pale bg-brand-sand/50">
+                  <img src={url} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover" />
+                  <button type="button" onClick={() => setGallery(gallery.filter((_, i) => i !== idx))}
+                    className="absolute top-2 right-2 w-6 h-6 bg-red-500/90 hover:bg-red-600 text-white rounded-full text-xs flex items-center justify-center shadow-sm backdrop-blur-sm">✕</button>
+                </div>
+              ))}
+              
+              {gallery.length < 4 && (
+                <label className="relative aspect-square border-2 border-dashed border-brand-pale rounded-xl flex items-center justify-center cursor-pointer hover:border-brand-forest/30 bg-brand-sand/30 transition-all">
+                  <input type="file" accept="image/*" className="hidden" onChange={(e) => { if (e.target.files?.[0]) handleGalleryUpload(e.target.files[0]); }} />
+                  {uploadingGallery ? (
+                    <div className="flex flex-col items-center gap-2 text-brand-gray text-xs">
+                      <div className="w-4 h-4 border-2 border-brand-forest border-t-transparent rounded-full animate-spin" />
+                      Uploading
+                    </div>
+                  ) : (
+                    <div className="text-center">
+                      <div className="text-2xl mb-1 text-brand-gray/50">+</div>
+                      <p className="text-xs font-medium text-brand-gray">Add Image</p>
+                    </div>
+                  )}
+                </label>
+              )}
+            </div>
+          </div>
+
           {/* Featured Toggle */}
           <label className="flex items-center gap-3 cursor-pointer">
             <div className="relative">

@@ -9,7 +9,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, slug, category, description, image, featured, longDescription, keyFeatures, applications, faqs } = body;
+    const { name, slug, category, description, image, featured, longDescription, keyFeatures, applications, faqs, gallery } = body;
 
     if (!name || !category) {
       return NextResponse.json({ error: "Name and category are required" }, { status: 400 });
@@ -30,6 +30,7 @@ export async function POST(request: Request) {
       keyFeatures: Array.isArray(keyFeatures) ? keyFeatures : [],
       applications: Array.isArray(applications) ? applications : [],
       faqs: Array.isArray(faqs) ? faqs : [],
+      gallery: Array.isArray(gallery) ? gallery : [],
     };
 
     products.push(newProduct);

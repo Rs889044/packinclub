@@ -1,42 +1,65 @@
 import fs from "fs";
 import path from "path";
-import type { Product, Blog, Contact } from "@/types";
+import type { Product, Blog, Contact, SiteSettings } from "@/types";
 
-const DATA_DIR = path.join(process.cwd(), "data");
+const dataDir = path.join(process.cwd(), "data");
+const productsFile = path.join(dataDir, "products.json");
+const blogsFile = path.join(dataDir, "blogs.json");
+const contactsFile = path.join(dataDir, "contacts.json");
+const settingsFile = path.join(dataDir, "settings.json");
 
-function ensureFile(filename: string, defaultContent: string = "[]") {
-  const filepath = path.join(DATA_DIR, filename);
-  if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
-  if (!fs.existsSync(filepath)) fs.writeFileSync(filepath, defaultContent);
-  return filepath;
+const defaultSettings: SiteSettings = {
+  favicon: "",
+  whoWeAreImage: "",
+  whyChooseUsImages: ["", "", "", "", "", ""]
+};
+
+function ensureDir() {
+  if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 }
 
 export function getProducts(): Product[] {
-  const filepath = ensureFile("products.json");
-  return JSON.parse(fs.readFileSync(filepath, "utf-8"));
+  if (!fs.existsSync(productsFile)) return [];
+  return JSON.parse(fs.readFileSync(productsFile, "utf-8"));
 }
 
 export function saveProducts(products: Product[]) {
-  const filepath = ensureFile("products.json");
-  fs.writeFileSync(filepath, JSON.stringify(products, null, 2));
+  ensureDir();
+  fs.writeFileSync(productsFile, JSON.stringify(products, null, 2));
 }
 
 export function getBlogs(): Blog[] {
-  const filepath = ensureFile("blogs.json");
-  return JSON.parse(fs.readFileSync(filepath, "utf-8"));
+  if (!fs.existsSync(blogsFile)) return [];
+  return JSON.parse(fs.readFileSync(blogsFile, "utf-8"));
 }
 
 export function saveBlogs(blogs: Blog[]) {
-  const filepath = ensureFile("blogs.json");
-  fs.writeFileSync(filepath, JSON.stringify(blogs, null, 2));
+  ensureDir();
+  fs.writeFileSync(blogsFile, JSON.stringify(blogs, null, 2));
 }
 
 export function getContacts(): Contact[] {
-  const filepath = ensureFile("contacts.json");
-  return JSON.parse(fs.readFileSync(filepath, "utf-8"));
+  if (!fs.existsSync(contactsFile)) return [];
+  const raw = fs.readFileSync(contactsFile, "utf-8");
+  return JSON.parse(raw);
 }
 
 export function saveContacts(contacts: Contact[]) {
-  const filepath = ensureFile("contacts.json");
-  fs.writeFileSync(filepath, JSON.stringify(contacts, null, 2));
+  ensureDir();
+  fs.writeFileSync(contactsFile, JSON.stringify(contacts, null, 2));
+}
+
+export function getSettings(): SiteSettings {
+  if (!fs.existsSync(settingsFile)) return defaultSettings;
+  try {
+    const raw = fs.readFileSync(settingsFile, "utf-8");
+    return { ...defaultSettings, ...JSON.parse(raw) };
+  } catch {
+    return defaultSettings;
+  }
+}
+
+export function saveSettings(settings: SiteSettings) {
+  ensureDir();
+  fs.writeFileSync(settingsFile, JSON.stringify(settings, null, 2));
 }

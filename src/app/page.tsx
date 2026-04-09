@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import FadeIn from "@/components/FadeIn";
-import type { Product } from "@/types";
+import type { Product, SiteSettings } from "@/types";
 import { useEffect, useState } from "react";
 
 function Hero() {
@@ -60,7 +60,7 @@ function Hero() {
   );
 }
 
-function WhoWeAre() {
+function WhoWeAre({ image }: { image?: string }) {
   return (
     <section className="py-20 md:py-28 bg-white">
       <div className="max-w-7xl mx-auto px-5">
@@ -83,14 +83,20 @@ function WhoWeAre() {
             </Link>
           </FadeIn>
           <FadeIn delay={0.2}>
-            <div className="relative">
-              <div className="aspect-[4/3] rounded-2xl bg-gradient-to-br from-brand-pale via-brand-mint/30 to-brand-leaf/20 flex items-center justify-center">
-                <div className="text-center p-8">
-                  <div className="text-6xl mb-4">🌱</div>
-                  <p className="font-display text-xl text-brand-forest font-semibold">100% Plant-Based</p>
-                  <p className="text-sm text-brand-gray mt-1">Compostable in 180 days</p>
+            <div className="relative h-full flex flex-col justify-center">
+              {image ? (
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden border border-brand-pale shadow-lg">
+                  <img src={image} alt="Who We Are" className="w-full h-full object-cover" />
                 </div>
-              </div>
+              ) : (
+                <div className="aspect-[4/3] rounded-2xl bg-gradient-to-br from-brand-pale via-brand-mint/30 to-brand-leaf/20 flex items-center justify-center border border-brand-pale">
+                  <div className="text-center p-8">
+                    <div className="text-6xl mb-4">🌱</div>
+                    <p className="font-display text-xl text-brand-forest font-semibold">100% Plant-Based</p>
+                    <p className="text-sm text-brand-gray mt-1">Compostable in 180 days</p>
+                  </div>
+                </div>
+              )}
               <div className="absolute -bottom-4 -right-4 w-32 h-32 rounded-xl bg-brand-forest/10 -z-10" />
             </div>
           </FadeIn>
@@ -191,7 +197,8 @@ function ComparisonTable() {
   );
 }
 
-function WhyChoose() {
+function WhyChoose({ customImages }: { customImages?: string[] }) {
+  const images = customImages || ["", "", "", "", "", ""];
   const features = [
     { icon: "🌿", title: "100% Plant-Based", desc: "Every product is made from renewable, plant-derived materials that fully decompose." },
     { icon: "💪", title: "Strength of Plastic", desc: "Our compostable products match the durability and performance of conventional plastic." },
@@ -214,7 +221,13 @@ function WhyChoose() {
           {features.map((f, i) => (
             <FadeIn key={f.title} delay={i * 0.08}>
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/15 transition-all h-full">
-                <span className="text-3xl block mb-4">{f.icon}</span>
+                {images[i] ? (
+                  <div className="w-12 h-12 rounded-xl overflow-hidden bg-white/20 mb-4 flex items-center justify-center">
+                    <img src={images[i]} alt={f.title} className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <span className="text-3xl block mb-4">{f.icon}</span>
+                )}
                 <h3 className="font-display text-lg font-semibold mb-2">{f.title}</h3>
                 <p className="text-sm text-white/70 leading-relaxed">{f.desc}</p>
               </div>
@@ -275,13 +288,18 @@ function CTA() {
 }
 
 export default function HomePage() {
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
+  useEffect(() => {
+    fetch("/api/admin/settings").then(r => r.json()).then(setSettings);
+  }, []);
+
   return (
     <>
       <Hero />
-      <WhoWeAre />
+      <WhoWeAre image={settings?.whoWeAreImage} />
       <FeaturedProducts />
       <ComparisonTable />
-      <WhyChoose />
+      <WhyChoose customImages={settings?.whyChooseUsImages} />
       <Stats />
       <CTA />
     </>

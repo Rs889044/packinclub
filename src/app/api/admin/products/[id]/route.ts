@@ -27,6 +27,7 @@ export async function PUT(request: Request, { params }: Props) {
       keyFeatures: body.keyFeatures ?? products[index].keyFeatures ?? [],
       applications: body.applications ?? products[index].applications ?? [],
       faqs: body.faqs ?? products[index].faqs ?? [],
+      gallery: body.gallery ?? products[index].gallery ?? [],
     };
 
     saveProducts(products);

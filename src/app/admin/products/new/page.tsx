@@ -22,6 +22,8 @@ export default function NewProductPage() {
   const [keyFeatures, setKeyFeatures] = useState("");
   const [applications, setApplications] = useState("");
   const [faqs, setFaqs] = useState<{question: string, answer: string}[]>([]);
+  const [gallery, setGallery] = useState<string[]>([]);
+  const [uploadingGallery, setUploadingGallery] = useState(false);
 
   function updateField(field: string, value: string | boolean) {
     setForm(prev => {
@@ -45,6 +47,19 @@ export default function NewProductPage() {
     setUploading(false);
   }
 
+  async function handleGalleryUpload(file: File) {
+    if (gallery.length >= 4) return;
+    setUploadingGallery(true);
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const res = await fetch("/api/admin/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      if (data.url) setGallery([...gallery, data.url]);
+    } catch { /* ignore */ }
+    setUploadingGallery(false);
+  }
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -54,7 +69,8 @@ export default function NewProductPage() {
       image: imageUrl,
       keyFeatures: keyFeatures.split("\n").map(s => s.trim()).filter(Boolean),
       applications: applications.split("\n").map(s => s.trim()).filter(Boolean),
-      faqs
+      faqs,
+      gallery
     };
 
     const res = await fetch("/api/admin/products", {

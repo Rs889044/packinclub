@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getProducts } from "@/lib/data";
 import FadeIn from "@/components/FadeIn";
 import ProductDetailsClient from "./ProductDetailsClient";
+import ProductGallery from "./ProductGallery";
 
 type Props = { params: { slug: string } };
 
@@ -56,15 +57,7 @@ export default function ProductPage({ params }: Props) {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             {/* Image Gallery */}
             <FadeIn>
-              <div className="bg-white rounded-3xl p-4 md:p-8 shadow-xl shadow-brand-forest/5 border border-brand-pale aspect-square flex items-center justify-center overflow-hidden">
-                {product.image ? (
-                  <img src={product.image} alt={product.name} className="w-full h-full object-cover rounded-2xl" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-brand-sand rounded-2xl text-6xl text-brand-gray/30">
-                    No Image
-                  </div>
-                )}
-              </div>
+              <ProductGallery image={product.image} gallery={product.gallery} name={product.name} />
             </FadeIn>
 
             {/* Product Info */}

@@ -10,6 +10,7 @@ export interface Product {
   keyFeatures?: string[];
   applications?: string[];
   faqs?: { question: string; answer: string }[];
+  gallery?: string[];
 }
 
 export interface Blog {
@@ -31,6 +32,12 @@ export interface Contact {
   phone: string;
   company: string;
   interest: string;
-  message: string;
+  message?: string;
   createdAt: string;
+}
+
+export interface SiteSettings {
+  favicon: string;
+  whoWeAreImage: string;
+  whyChooseUsImages: string[];
 }

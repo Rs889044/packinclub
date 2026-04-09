@@ -134,7 +134,7 @@ export default function HomeContentPage() {
               <input type="text" value={content.home.hero.subtitle} onChange={e => setContent({...content, home: {...content.home, hero: {...content.home.hero, subtitle: e.target.value}}})} className="w-full px-3 py-2 text-sm rounded-lg border border-brand-pale" />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-brand-charcoal mb-1">Main Heading <span className="text-xs text-brand-gray font-normal">(Recommended: 5-8 words. Use HTML tags like &lt;span class="italic text-brand-forest"&gt; for highlighted words)</span></label>
+              <label className="block text-sm font-semibold text-brand-charcoal mb-1">Main Heading <span className="text-xs text-brand-gray font-normal">(Recommended: 5-8 words. Use HTML tags like &lt;span class=&quot;italic text-brand-forest&quot;&gt; for highlighted words)</span></label>
               <input type="text" value={content.home.hero.title} onChange={e => setContent({...content, home: {...content.home, hero: {...content.home.hero, title: e.target.value}}})} className="w-full px-3 py-2 text-sm rounded-lg border border-brand-pale" />
             </div>
             <div>

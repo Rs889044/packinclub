@@ -39,5 +39,6 @@ export interface Contact {
 export interface SiteSettings {
   favicon: string;
   whoWeAreImage: string;
+  productLifeCycleImage: string;
   whyChooseUsImages: string[];
 }

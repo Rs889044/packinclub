@@ -6,6 +6,7 @@ export default function SettingsPage() {
   const [settings, setSettings] = useState<SiteSettings>({
     favicon: "",
     whoWeAreImage: "",
+    productLifeCycleImage: "",
     whyChooseUsImages: ["", "", "", "", "", ""]
   });
   const [loading, setLoading] = useState(true);
@@ -135,11 +136,21 @@ export default function SettingsPage() {
         <div className="bg-white rounded-2xl border border-brand-pale p-6 space-y-6">
           <h2 className="font-display text-lg font-bold text-brand-charcoal border-b border-brand-pale pb-4">Home Page Overrides</h2>
           
-          <div>
-            <h3 className="text-sm font-semibold text-brand-charcoal mb-4">&quot;Who We Are&quot; Image</h3>
-            <p className="text-xs text-brand-gray mb-4">Replaces the default 🌱 emoji box on the homepage.</p>
-            <div className="max-w-sm">
-              {renderUploadBox("Featured Image", "whoWeAreImage")}
+          <div className="grid sm:grid-cols-2 gap-8">
+            <div>
+              <h3 className="text-sm font-semibold text-brand-charcoal mb-4">&quot;Who We Are&quot; Image</h3>
+              <p className="text-xs text-brand-gray mb-4">Replaces the default 🌱 emoji box on the homepage.</p>
+              <div className="max-w-sm">
+                {renderUploadBox("Featured Image", "whoWeAreImage")}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-brand-charcoal mb-4">Product Life Cycle Image</h3>
+              <p className="text-xs text-brand-gray mb-4">Displays in the full-width Life Cycle section on the homepage.</p>
+              <div className="max-w-sm">
+                {renderUploadBox("Infographic Image", "productLifeCycleImage")}
+              </div>
             </div>
           </div>
 

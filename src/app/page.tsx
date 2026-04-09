@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import FadeIn from "@/components/FadeIn";
-import type { Product, SiteSettings } from "@/types";
+import type { Product, SiteSettings, Blog } from "@/types";
 import { useEffect, useState } from "react";
 
 function Hero() {
@@ -111,8 +111,7 @@ function FeaturedProducts() {
   useEffect(() => {
     fetch("/api/admin/products").then(r => r.json()).then(setProducts);
   }, []);
-  const featured = products.filter((p) => p.featured);
-  const icons = ["📦", "🛍️", "🎞️", "🌾"];
+  const featured = products.filter((p) => p.featured).slice(0, 4);
 
   return (
     <section className="py-20 md:py-28 bg-brand-cream">
@@ -127,13 +126,28 @@ function FeaturedProducts() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {featured.map((p, i) => (
             <FadeIn key={p.id} delay={i * 0.1}>
-              <Link href={`/product/${p.slug}`} className="group block bg-white rounded-2xl p-6 hover:shadow-xl hover:shadow-brand-forest/5 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
-                <div className="w-16 h-16 rounded-xl bg-brand-pale flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform">{icons[i]}</div>
-                <h3 className="font-display text-lg font-semibold text-brand-charcoal mb-2 group-hover:text-brand-forest transition-colors">{p.name}</h3>
-                <p className="text-sm text-brand-gray leading-relaxed flex-1">{p.description}</p>
-                <div className="flex items-center justify-between mt-4">
-                  <span className="inline-block text-xs font-medium text-brand-forest bg-brand-pale px-3 py-1 rounded-full">{p.category}</span>
-                  <span className="text-xs font-bold text-brand-forest opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">Details <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><path d="M5 12h14m-7-7l7 7-7 7"/></svg></span>
+              <Link href={`/product/${p.slug}`} className="group block bg-white rounded-2xl overflow-hidden border border-brand-pale hover:shadow-xl hover:shadow-brand-forest/5 hover:border-brand-forest/20 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
+                <div className="aspect-[4/3] bg-brand-sand overflow-hidden relative border-b border-brand-pale/50 flex items-center justify-center p-4">
+                  {p.image ? (
+                    <img src={p.image} alt={p.name} className="w-full h-full object-contain rounded-xl group-hover:scale-105 transition-transform duration-500" />
+                  ) : (
+                    <span className="text-4xl opacity-20">📦</span>
+                  )}
+                  <span className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2.5 py-1 text-[10px] font-bold text-brand-forest uppercase tracking-wider rounded-md border border-brand-pale/50 shadow-sm z-10 transition-opacity">
+                    Featured
+                  </span>
+                </div>
+                <div className="p-5 flex flex-col items-start flex-1 text-left">
+                  <span className="inline-block text-[11px] font-bold text-brand-forest bg-brand-forest/5 px-2.5 py-1 rounded-md mb-3 border border-brand-forest/10 uppercase tracking-wider">{p.category}</span>
+                  <h3 className="font-display text-lg font-bold text-brand-charcoal mb-2 group-hover:text-brand-forest transition-colors leading-tight line-clamp-2">{p.name}</h3>
+                  <p className="text-sm text-brand-gray/80 leading-relaxed line-clamp-2 flex-1 mb-4">{p.description}</p>
+                  
+                  <div className="w-full pt-4 mt-auto border-t border-brand-pale/50 flex items-center justify-between text-sm font-semibold text-brand-forest group-hover:text-brand-green transition-colors">
+                    <span>View Product</span>
+                    <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                      <path d="M5 12h14m-7-7l7 7-7 7" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
                 </div>
               </Link>
             </FadeIn>
@@ -263,6 +277,81 @@ function Stats() {
   );
 }
 
+function ProductLifeCycle({ image }: { image?: string }) {
+  if (!image) return null;
+  return (
+    <section className="py-20 md:py-28 bg-white border-t border-brand-pale overflow-hidden">
+      <div className="max-w-6xl mx-auto px-5">
+        <FadeIn className="text-center max-w-2xl mx-auto mb-14">
+          <span className="text-sm font-semibold text-brand-leaf tracking-widest uppercase">From Earth to Earth</span>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-brand-charcoal mt-3 mb-4">
+            Product Lifecycle
+          </h2>
+          <p className="text-brand-gray text-lg">
+            Our compostable products decompose naturally within months, returning safely to the earth without leaving microplastics or toxins behind.
+          </p>
+        </FadeIn>
+        <FadeIn>
+          <div className="w-full rounded-3xl overflow-hidden border border-brand-pale/50 shadow-2xl shadow-brand-forest/5 flex items-center justify-center bg-brand-sand/30 p-2 md:p-6">
+            <img src={image} alt="Product Lifecycle" className="w-full h-auto object-contain rounded-2xl" />
+          </div>
+        </FadeIn>
+      </div>
+    </section>
+  );
+}
+
+function LatestBlogs() {
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  useEffect(() => {
+    fetch("/api/admin/blogs").then(r => r.json()).then(setBlogs);
+  }, []);
+
+  const latest = blogs.slice(0, 3);
+  if (latest.length === 0) return null;
+
+  return (
+    <section className="py-20 md:py-28 bg-brand-cream border-t border-brand-pale">
+      <div className="max-w-7xl mx-auto px-5">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+          <FadeIn className="max-w-xl">
+            <span className="text-sm font-semibold text-brand-leaf tracking-widest uppercase">Inside Packin Club</span>
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-brand-charcoal mt-3 mb-4">Latest News & Blogs</h2>
+            <p className="text-brand-gray">Stay updated on the latest in sustainable packaging, industry trends, and eco-friendly tips.</p>
+          </FadeIn>
+          <FadeIn>
+            <Link href="/blog" className="inline-flex items-center gap-2 font-semibold text-brand-forest hover:text-brand-green transition-colors pb-1 border-b-2 border-brand-forest/30 hover:border-brand-green">
+              View all articles
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+            </Link>
+          </FadeIn>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {latest.map((b, i) => (
+            <FadeIn key={b.id} delay={i * 0.1}>
+              <Link href={`/blog/${b.slug}`} className="group block bg-white rounded-2xl border border-brand-pale p-6 hover:shadow-xl hover:shadow-brand-forest/5 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="inline-block text-xs font-bold text-brand-forest bg-brand-pale px-3 py-1 rounded-full">{b.category}</span>
+                  <span className="text-xs text-brand-gray font-medium">{new Date(b.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
+                </div>
+                <h3 className="font-display text-xl font-bold text-brand-charcoal mb-3 group-hover:text-brand-forest transition-colors line-clamp-2">{b.title}</h3>
+                <p className="text-sm text-brand-gray/80 mb-6 line-clamp-3 flex-1">{b.excerpt}</p>
+                <div className="flex items-center gap-2 mt-auto">
+                  <div className="w-8 h-8 rounded-full bg-brand-sand flex items-center justify-center font-bold text-brand-forest text-xs">
+                    {b.author.charAt(0)}
+                  </div>
+                  <span className="text-sm font-semibold text-brand-charcoal">{b.author}</span>
+                </div>
+              </Link>
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function CTA() {
   return (
     <section className="py-20 md:py-28 bg-white">
@@ -323,7 +412,9 @@ export default function HomePage() {
       <FeaturedProducts />
       <ComparisonTable />
       <WhyChoose customImages={settings?.whyChooseUsImages} />
+      <ProductLifeCycle image={settings?.productLifeCycleImage} />
       <Stats />
+      <LatestBlogs />
       <CTA />
     </>
   );

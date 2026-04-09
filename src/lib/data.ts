@@ -11,6 +11,7 @@ const settingsFile = path.join(dataDir, "settings.json");
 const defaultSettings: SiteSettings = {
   favicon: "",
   whoWeAreImage: "",
+  productLifeCycleImage: "",
   whyChooseUsImages: ["", "", "", "", "", ""]
 };
 

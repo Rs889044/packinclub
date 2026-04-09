@@ -1,7 +1,8 @@
 "use client";
 import { usePathname } from "next/navigation";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
+import WhatsAppWidget from "./WhatsAppWidget";
 
 export default function LayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -16,6 +17,7 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
       <Navbar />
       <main>{children}</main>
       <Footer />
+      <WhatsAppWidget />
     </>
   );
 }

@@ -19,11 +19,12 @@
     "category": "Retail Packaging",
     "description": "Sturdy D-cut carry bags for retail stores. A perfect plastic-free alternative.",
     "image": "/uploads/biodegradable-d-cut-shopping-bag-1-500x500-1775759815827.jpg",
-    "featured": true,
+    "featured": false,
     "longDescription": "",
     "keyFeatures": [],
     "applications": [],
-    "faqs": []
+    "faqs": [],
+    "gallery": []
   },
   {
     "id": 3,
@@ -119,11 +120,12 @@
     "category": "Retail Packaging",
     "description": "Heavy-duty compostable garbage bags for homes and businesses.",
     "image": "/uploads/compostable-garbage-bag-500x500-1775759967612.jpg",
-    "featured": false,
+    "featured": true,
     "longDescription": "",
     "keyFeatures": [],
     "applications": [],
-    "faqs": []
+    "faqs": [],
+    "gallery": []
   },
   {
     "id": 8,
@@ -145,11 +147,12 @@
     "category": "Industrial Packaging",
     "description": "Protect clothing during shipping with compostable garment covers.",
     "image": "/uploads/biodegradable-t-shirt-packaging-500x500-1775759994137.jpeg",
-    "featured": false,
+    "featured": true,
     "longDescription": "",
     "keyFeatures": [],
     "applications": [],
-    "faqs": []
+    "faqs": [],
+    "gallery": []
   },
   {
     "id": 10,
@@ -280,11 +283,12 @@
     "category": "Retail Packaging",
     "description": "Compostable paper cups with PLA coating for hot and cold beverages.",
     "image": "/uploads/pla-coated-cup-500x500-1775760163913.jpeg",
-    "featured": false,
+    "featured": true,
     "longDescription": "",
     "keyFeatures": [],
     "applications": [],
-    "faqs": []
+    "faqs": [],
+    "gallery": []
   },
   {
     "id": 21,
@@ -306,11 +310,12 @@
     "category": "Retail Packaging",
     "description": "Soft, sustainable bamboo tissue paper — tree-free and biodegradable.",
     "image": "/uploads/bambootissuebo-500x500-1775760075663.jpeg",
-    "featured": false,
+    "featured": true,
     "longDescription": "",
     "keyFeatures": [],
     "applications": [],
-    "faqs": []
+    "faqs": [],
+    "gallery": []
   },
   {
     "id": 23,

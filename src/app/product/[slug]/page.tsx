@@ -42,8 +42,32 @@ export default function ProductPage({ params }: Props) {
   const waMessage = encodeURIComponent(`Hi! I'm interested in ${product.name}. Can you share more details and pricing?`);
   const waLink = `https://wa.me/918178414360?text=${waMessage}`;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": product.name,
+    "image": product.image ? [product.image, ...(product.gallery || [])] : [],
+    "description": product.description,
+    "brand": {
+      "@type": "Brand",
+      "name": "Packin Club"
+    },
+    "category": product.category,
+    "offers": {
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "priceCurrency": "INR",
+      "price": "0.00",
+      "seller": {
+        "@type": "Organization",
+        "name": "Packin Club"
+      }
+    }
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {/* Hero Section */}
       <section className="pt-28 pb-12 md:pt-36 md:pb-24 bg-brand-cream overflow-hidden">
         <div className="max-w-7xl mx-auto px-5">

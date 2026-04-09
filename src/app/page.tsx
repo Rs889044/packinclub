@@ -293,8 +293,31 @@ export default function HomePage() {
     fetch("/api/admin/settings").then(r => r.json()).then(setSettings);
   }, []);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Packin Club",
+    "image": "https://packinclub.com/images/logo.png",
+    "@id": "https://packinclub.com",
+    "url": "https://packinclub.com",
+    "telephone": "+918178414360",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "D-1/64, 21st Century Business Centre, Veer Savarkar Block, Shakarpur",
+      "addressLocality": "Nirman Vihar, Delhi",
+      "postalCode": "110092",
+      "addressCountry": "IN"
+    },
+    "description": "India's trusted partner for sustainable, durable, and CPCB-certified eco-packaging solutions.",
+    "founder": [
+      { "@type": "Person", "name": "Vikas Jha" },
+      { "@type": "Person", "name": "Rajat Sharma" }
+    ]
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Hero />
       <WhoWeAre image={settings?.whoWeAreImage} />
       <FeaturedProducts />

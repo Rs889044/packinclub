@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import FadeIn from "@/components/FadeIn";
-import type { Product, SiteSettings, Blog, PageContent } from "@/types";
+import type { Product, Blog, PageContent } from "@/types";
 import { useEffect, useState } from "react";
 
 function Hero({ content }: { content?: PageContent["home"]["hero"] }) {

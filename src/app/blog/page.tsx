@@ -1,20 +1,9 @@
 "use client";
-import { useState, useRef } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import blogs from "@/data/blogs.json";
-
-function FadeIn({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-  return (
-    <motion.div ref={ref} initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay, ease: "easeOut" }} className={className}>
-      {children}
-    </motion.div>
-  );
-}
-
-const categories = ["All", ...Array.from(new Set(blogs.map((b) => b.category)))];
+import FadeIn from "@/components/FadeIn";
+import type { Blog } from "@/types";
 
 const categoryColors: Record<string, string> = {
   Industries: "bg-blue-50 text-blue-700",
@@ -33,6 +22,13 @@ function formatDate(dateStr: string) {
 
 export default function BlogPage() {
   const [active, setActive] = useState("All");
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+
+  useEffect(() => {
+    fetch("/api/admin/blogs").then(r => r.json()).then(setBlogs);
+  }, []);
+
+  const categories = ["All", ...Array.from(new Set(blogs.map((b) => b.category)))];
   const filtered = active === "All" ? blogs : blogs.filter((b) => b.category === active);
 
   return (
@@ -95,11 +91,15 @@ export default function BlogPage() {
                 >
                   <Link href={`/blog/${post.slug}`} className="group block h-full">
                     <article className="bg-brand-cream rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-brand-forest/5 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
-                      {/* Thumbnail placeholder */}
-                      <div className="aspect-[3/2] bg-gradient-to-br from-brand-pale via-brand-mint/20 to-brand-leaf/10 flex items-center justify-center relative">
-                        <div className="text-5xl group-hover:scale-110 transition-transform duration-300">
-                          {post.category === "Industries" ? "🏭" : post.category === "Health" ? "💚" : "🌿"}
-                        </div>
+                      {/* Thumbnail */}
+                      <div className="aspect-[3/2] bg-gradient-to-br from-brand-pale via-brand-mint/20 to-brand-leaf/10 flex items-center justify-center relative overflow-hidden">
+                        {post.thumbnail ? (
+                          <img src={post.thumbnail} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        ) : (
+                          <div className="text-5xl group-hover:scale-110 transition-transform duration-300">
+                            {post.category === "Industries" ? "🏭" : post.category === "Health" ? "💚" : "🌿"}
+                          </div>
+                        )}
                         <span className={`absolute top-3 left-3 text-[10px] font-semibold px-2.5 py-1 rounded-full ${categoryColors[post.category] || "bg-gray-50 text-gray-700"}`}>
                           {post.category}
                         </span>

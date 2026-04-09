@@ -1,17 +1,14 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import blogs from "@/data/blogs.json";
+import { getBlogs } from "@/lib/data";
 import BlogPostClient from "./BlogPostClient";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export async function generateStaticParams() {
-  return blogs.map((b) => ({ slug: b.slug }));
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
+  const blogs = getBlogs();
   const post = blogs.find((b) => b.slug === slug);
   if (!post) return { title: "Post Not Found" };
   return {
@@ -28,8 +25,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
+  const blogs = getBlogs();
   const post = blogs.find((b) => b.slug === slug);
   if (!post) notFound();
 
@@ -100,8 +100,12 @@ export default async function BlogPostPage({ params }: Props) {
               {related.map((r) => (
                 <Link key={r.id} href={`/blog/${r.slug}`} className="group block">
                   <article className="bg-white rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-brand-forest/5 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
-                    <div className="aspect-[3/2] bg-gradient-to-br from-brand-pale via-brand-mint/20 to-brand-leaf/10 flex items-center justify-center">
-                      <span className="text-4xl group-hover:scale-110 transition-transform">{r.category === "Industries" ? "🏭" : "🌿"}</span>
+                    <div className="aspect-[3/2] bg-gradient-to-br from-brand-pale via-brand-mint/20 to-brand-leaf/10 flex items-center justify-center overflow-hidden">
+                      {r.thumbnail ? (
+                        <img src={r.thumbnail} alt={r.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                      ) : (
+                        <span className="text-4xl group-hover:scale-110 transition-transform">{r.category === "Industries" ? "🏭" : "🌿"}</span>
+                      )}
                     </div>
                     <div className="p-5 flex flex-col flex-1">
                       <span className="text-xs text-brand-gray mb-2">{formatDate(r.date)}</span>

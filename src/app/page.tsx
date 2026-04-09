@@ -1,24 +1,9 @@
 "use client";
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
-import products from "@/data/products.json";
-
-function FadeIn({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 30 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay, ease: "easeOut" }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
-}
+import FadeIn from "@/components/FadeIn";
+import type { Product } from "@/types";
+import { useEffect, useState } from "react";
 
 function Hero() {
   return (
@@ -116,6 +101,10 @@ function WhoWeAre() {
 }
 
 function FeaturedProducts() {
+  const [products, setProducts] = useState<Product[]>([]);
+  useEffect(() => {
+    fetch("/api/admin/products").then(r => r.json()).then(setProducts);
+  }, []);
   const featured = products.filter((p) => p.featured);
   const icons = ["📦", "🛍️", "🎞️", "🌾"];
 
@@ -132,12 +121,15 @@ function FeaturedProducts() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {featured.map((p, i) => (
             <FadeIn key={p.id} delay={i * 0.1}>
-              <div className="group bg-white rounded-2xl p-6 hover:shadow-xl hover:shadow-brand-forest/5 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
+              <Link href={`/product/${p.slug}`} className="group block bg-white rounded-2xl p-6 hover:shadow-xl hover:shadow-brand-forest/5 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
                 <div className="w-16 h-16 rounded-xl bg-brand-pale flex items-center justify-center text-2xl mb-5 group-hover:scale-110 transition-transform">{icons[i]}</div>
-                <h3 className="font-display text-lg font-semibold text-brand-charcoal mb-2">{p.name}</h3>
+                <h3 className="font-display text-lg font-semibold text-brand-charcoal mb-2 group-hover:text-brand-forest transition-colors">{p.name}</h3>
                 <p className="text-sm text-brand-gray leading-relaxed flex-1">{p.description}</p>
-                <span className="inline-block mt-4 text-xs font-medium text-brand-forest bg-brand-pale px-3 py-1 rounded-full self-start">{p.category}</span>
-              </div>
+                <div className="flex items-center justify-between mt-4">
+                  <span className="inline-block text-xs font-medium text-brand-forest bg-brand-pale px-3 py-1 rounded-full">{p.category}</span>
+                  <span className="text-xs font-bold text-brand-forest opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">Details <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><path d="M5 12h14m-7-7l7 7-7 7"/></svg></span>
+                </div>
+              </Link>
             </FadeIn>
           ))}
         </div>

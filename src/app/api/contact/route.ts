@@ -1,14 +1,5 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
-
-const DATA_FILE = path.join(process.cwd(), "data", "contacts.json");
-
-function ensureDataDir() {
-  const dir = path.dirname(DATA_FILE);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  if (!fs.existsSync(DATA_FILE)) fs.writeFileSync(DATA_FILE, "[]");
-}
+import { getContacts, saveContacts } from "@/lib/data";
 
 export async function POST(request: Request) {
   try {
@@ -19,8 +10,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    ensureDataDir();
-    const contacts = JSON.parse(fs.readFileSync(DATA_FILE, "utf-8"));
+    const contacts = getContacts();
     contacts.push({
       id: Date.now(),
       name,
@@ -31,7 +21,7 @@ export async function POST(request: Request) {
       message: message || "",
       createdAt: new Date().toISOString(),
     });
-    fs.writeFileSync(DATA_FILE, JSON.stringify(contacts, null, 2));
+    saveContacts(contacts);
 
     return NextResponse.json({ success: true });
   } catch {

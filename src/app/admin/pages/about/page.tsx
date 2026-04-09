@@ -63,6 +63,7 @@ export default function AboutContentPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(content)
     });
+    await fetch("/api/admin/cleanup", { method: "POST" });
     setSaving(false);
   }
 

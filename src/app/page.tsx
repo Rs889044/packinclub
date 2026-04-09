@@ -272,9 +272,9 @@ function ProductLifeCycle({ content }: { content?: PageContent["home"]["productL
           </p>
         </FadeIn>
         <FadeIn>
-          <div className="w-full rounded-3xl overflow-hidden border border-brand-pale/50 flex items-center justify-center bg-brand-sand/30 p-2 md:p-6">
+          <div className="w-full flex items-center justify-center bg-white">
             {content.image ? (
-              <img src={content.image} alt="Product Lifecycle" className="w-full h-auto object-contain rounded-2xl shadow-2xl shadow-brand-forest/5" />
+              <img src={content.image} alt="Product Lifecycle" className="w-full h-auto object-contain" />
             ) : (
               <div className="h-64 flex flex-col items-center justify-center text-brand-gray border-2 border-dashed border-brand-pale w-full rounded-2xl">
                 <span className="text-4xl mb-3">♻️</span>

@@ -17,6 +17,7 @@ export default function AdminBlogsPage() {
     setDeleting(id);
     const res = await fetch(`/api/admin/blogs/${id}`, { method: "DELETE" });
     if (res.ok) {
+      await fetch("/api/admin/cleanup", { method: "POST" });
       setBlogs(prev => prev.filter(b => b.id !== id));
     }
     setDeleting(null);

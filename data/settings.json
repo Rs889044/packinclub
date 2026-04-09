@@ -1,6 +1,13 @@
 {
   "favicon": "/uploads/1000028519-1775764571257.jpg",
   "enableWhatsApp": false,
+  "socialLinks": {
+    "facebook": "",
+    "twitter": "",
+    "instagram": "",
+    "linkedin": "",
+    "youtube": ""
+  },
   "whoWeAreImage": "",
   "productLifeCycleImage": "/uploads/screenshot-2026-04-10-at-2-02-03-am-1775766733938.png",
   "whyChooseUsImages": [

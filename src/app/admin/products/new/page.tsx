@@ -80,6 +80,7 @@ export default function NewProductPage() {
     });
 
     if (res.ok) {
+      await fetch("/api/admin/cleanup", { method: "POST" });
       router.push("/admin/products");
     } else {
       setLoading(false);

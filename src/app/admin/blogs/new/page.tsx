@@ -53,6 +53,7 @@ export default function NewBlogPage() {
     });
 
     if (res.ok) {
+      await fetch("/api/admin/cleanup", { method: "POST" });
       router.push("/admin/blogs");
     } else {
       setLoading(false);

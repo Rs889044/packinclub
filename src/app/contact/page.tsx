@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect, FormEvent } from "react";
 import FadeIn from "@/components/FadeIn";
 import type { PageContent } from "@/types";

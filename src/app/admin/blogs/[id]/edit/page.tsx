@@ -71,6 +71,7 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
     });
 
     if (res.ok) {
+      await fetch("/api/admin/cleanup", { method: "POST" });
       router.push("/admin/blogs");
     } else {
       setLoading(false);

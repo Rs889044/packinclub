@@ -17,6 +17,7 @@ export default function AdminProductsPage() {
     setDeleting(id);
     const res = await fetch(`/api/admin/products/${id}`, { method: "DELETE" });
     if (res.ok) {
+      await fetch("/api/admin/cleanup", { method: "POST" });
       setProducts(prev => prev.filter(p => p.id !== id));
     }
     setDeleting(null);

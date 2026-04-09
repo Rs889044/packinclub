@@ -101,6 +101,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
     });
 
     if (res.ok) {
+      await fetch("/api/admin/cleanup", { method: "POST" });
       router.push("/admin/products");
     } else {
       setLoading(false);

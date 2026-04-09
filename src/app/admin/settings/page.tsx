@@ -48,6 +48,7 @@ export default function SettingsPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(settings)
     });
+    await fetch("/api/admin/cleanup", { method: "POST" });
     setSaving(false);
     // Optional: show a success toast here
   }

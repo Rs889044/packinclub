@@ -6,9 +6,6 @@ export default function SettingsPage() {
   const [settings, setSettings] = useState<SiteSettings>({
     favicon: "",
     enableWhatsApp: false,
-    whoWeAreImage: "",
-    productLifeCycleImage: "",
-    whyChooseUsCards: Array(6).fill({ title: "", desc: "" }),
     socialLinks: { facebook: "", twitter: "", instagram: "", linkedin: "", youtube: "" }
   });
   const [loading, setLoading] = useState(true);
@@ -139,29 +136,8 @@ export default function SettingsPage() {
           </label>
         </div>
 
-        {/* Home Page Sections */}
+        {/* Social Links */}
         <div className="bg-white rounded-2xl border border-brand-pale p-6 space-y-6">
-          <h2 className="font-display text-lg font-bold text-brand-charcoal border-b border-brand-pale pb-4">Home Page Overrides</h2>
-          
-          <div className="grid sm:grid-cols-2 gap-8">
-            <div>
-              <h3 className="text-sm font-semibold text-brand-charcoal mb-4">&quot;Who We Are&quot; Image</h3>
-              <p className="text-xs text-brand-gray mb-4">Replaces the default 🌱 emoji box on the homepage.</p>
-              <div className="max-w-sm">
-                {renderUploadBox("Featured Image", "whoWeAreImage")}
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-sm font-semibold text-brand-charcoal mb-4">Product Life Cycle Image</h3>
-              <p className="text-xs text-brand-gray mb-4">Displays in the full-width Life Cycle section on the homepage.</p>
-              <div className="max-w-sm">
-                {renderUploadBox("Infographic Image", "productLifeCycleImage")}
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-6 border-t border-brand-pale">
             <h3 className="text-sm font-semibold text-brand-charcoal mb-4">Social Media Links</h3>
             <p className="text-xs text-brand-gray mb-4">Add your social media URLs to display them in the website footer.</p>
             <div className="grid sm:grid-cols-2 gap-4">
@@ -183,44 +159,7 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          <div className="pt-6 border-t border-brand-pale">
-            <h3 className="text-sm font-semibold text-brand-charcoal mb-4">&quot;Why Choose Us&quot; Cards</h3>
-            <p className="text-xs text-brand-gray mb-4">Edit the text for the 6 feature cards on the homepage.</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {settings.whyChooseUsCards?.map((card, i) => (
-                <div key={i} className="bg-brand-sand/50 p-4 rounded-xl border border-brand-pale space-y-3">
-                  <div>
-                    <label className="block text-xs font-bold text-brand-charcoal mb-1">Card {i + 1} Title</label>
-                    <input
-                      type="text"
-                      value={card.title}
-                      onChange={(e) => {
-                        const newCards = [...settings.whyChooseUsCards];
-                        newCards[i].title = e.target.value;
-                        setSettings({ ...settings, whyChooseUsCards: newCards });
-                      }}
-                      className="w-full px-3 py-2 text-sm rounded-lg border border-brand-pale font-medium text-brand-charcoal"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-brand-charcoal mb-1">Description</label>
-                    <textarea
-                      rows={2}
-                      value={card.desc}
-                      onChange={(e) => {
-                        const newCards = [...settings.whyChooseUsCards];
-                        newCards[i].desc = e.target.value;
-                        setSettings({ ...settings, whyChooseUsCards: newCards });
-                      }}
-                      className="w-full px-3 py-2 text-sm rounded-lg border border-brand-pale resize-none"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
 
-        </div>
 
         <div className="flex items-center gap-4 pt-4">
           <button type="submit" disabled={saving}

@@ -2,10 +2,12 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import FadeIn from "@/components/FadeIn";
-import type { Product, SiteSettings, Blog } from "@/types";
+import type { Product, SiteSettings, Blog, PageContent } from "@/types";
 import { useEffect, useState } from "react";
 
-function Hero() {
+function Hero({ content }: { content?: PageContent["home"]["hero"] }) {
+  const data = content || { title: "Packaging that <span class=\"text-brand-forest italic\">returns</span><br />to the earth", subtitle: "CPCB-Certified &bull; 100% Plant-Based", desc: "India's trusted partner for sustainable, durable, and CPCB-certified eco-packaging solutions. Replace single-use plastic without compromising strength." };
+  
   return (
     <section className="relative min-h-[92vh] flex items-center overflow-hidden bg-gradient-to-br from-brand-cream via-brand-pale/40 to-brand-cream">
       <div className="absolute top-20 right-10 w-72 h-72 rounded-full bg-brand-mint/20 blur-3xl" />
@@ -17,7 +19,7 @@ function Hero() {
           <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.7 }}>
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-forest/10 text-brand-forest text-sm font-medium mb-6">
               <span className="w-2 h-2 rounded-full bg-brand-leaf animate-pulse" />
-              CPCB-Certified &bull; 100% Plant-Based
+              {data.subtitle}
             </span>
           </motion.div>
 
@@ -26,11 +28,8 @@ function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.15 }}
             className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-brand-charcoal leading-[1.1] mb-6"
-          >
-            Packaging that{" "}
-            <span className="text-brand-forest italic">returns</span>
-            <br />to the earth
-          </motion.h1>
+            dangerouslySetInnerHTML={{ __html: data.title }}
+          />
 
           <motion.p
             initial={{ opacity: 0, y: 30 }}
@@ -38,7 +37,7 @@ function Hero() {
             transition={{ duration: 0.7, delay: 0.3 }}
             className="text-lg md:text-xl text-brand-gray max-w-xl mb-10 leading-relaxed"
           >
-            India&apos;s trusted partner for sustainable, durable, and CPCB-certified eco-packaging solutions. Replace single-use plastic without compromising strength.
+            {data.desc}
           </motion.p>
 
           <motion.div
@@ -60,22 +59,19 @@ function Hero() {
   );
 }
 
-function WhoWeAre({ image }: { image?: string }) {
+function WhoWeAre({ content }: { content?: PageContent["home"]["whoWeAre"] }) {
+  if (!content) {
+    content = { title: "Replacing plastic, <span class=\"text-brand-forest italic\">one package</span> at a time", desc: "At Packin Club, we help brands replace plastic with certified compostable packaging — without compromising on strength, durability, or quality. Based in Delhi, we serve e-commerce, retail, food delivery, logistics, and agriculture industries across India.\n\nOur products are 100% plant-based, fully decompose within 180 days, and match the performance of conventional plastic. Every bag, film, and pouch we make is a step towards a plastic-free future.", image: "" };
+  }
   return (
     <section className="py-20 md:py-28 bg-white">
       <div className="max-w-7xl mx-auto px-5">
         <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center">
           <FadeIn>
             <span className="text-sm font-semibold text-brand-leaf tracking-widest uppercase">Who We Are</span>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-brand-charcoal mt-3 mb-6">
-              Replacing plastic,{" "}
-              <span className="text-brand-forest italic">one package</span> at a time
-            </h2>
-            <p className="text-brand-gray leading-relaxed mb-4">
-              At Packin Club, we help brands replace plastic with certified compostable packaging — without compromising on strength, durability, or quality. Based in Delhi, we serve e-commerce, retail, food delivery, logistics, and agriculture industries across India.
-            </p>
-            <p className="text-brand-gray leading-relaxed mb-8">
-              Our products are 100% plant-based, fully decompose within 180 days, and match the performance of conventional plastic. Every bag, film, and pouch we make is a step towards a plastic-free future.
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-brand-charcoal mt-3 mb-6" dangerouslySetInnerHTML={{ __html: content.title }}></h2>
+            <p className="text-brand-gray leading-relaxed mb-4 whitespace-pre-line">
+              {content.desc}
             </p>
             <Link href="/about" className="inline-flex items-center gap-2 text-brand-forest font-semibold hover:gap-3 transition-all">
               Learn more about us
@@ -84,9 +80,9 @@ function WhoWeAre({ image }: { image?: string }) {
           </FadeIn>
           <FadeIn delay={0.2}>
             <div className="relative h-full flex flex-col justify-center">
-              {image ? (
+              {content.image ? (
                 <div className="aspect-[4/3] rounded-2xl overflow-hidden border border-brand-pale shadow-lg">
-                  <img src={image} alt="Who We Are" className="w-full h-full object-cover" />
+                  <img src={content.image} alt="Who We Are" className="w-full h-full object-cover" />
                 </div>
               ) : (
                 <div className="aspect-[4/3] rounded-2xl bg-gradient-to-br from-brand-pale via-brand-mint/30 to-brand-leaf/20 flex items-center justify-center border border-brand-pale">
@@ -211,32 +207,23 @@ function ComparisonTable() {
   );
 }
 
-function WhyChoose({ cards }: { cards?: { title: string; desc: string }[] }) {
-  const defaultCards = [
-    { title: "100% Plant-Based", desc: "Every product is made from renewable, plant-derived materials that fully decompose." },
-    { title: "Strength of Plastic", desc: "Our compostable products match the durability and performance of conventional plastic." },
-    { title: "CPCB-Certified", desc: "All manufacturing partners are CPCB-certified, meeting India's highest standards." },
-    { title: "Fully Customizable", desc: "Custom printing, sizing, and branding options for your unique business needs." },
-    { title: "Widest Range in India", desc: "24+ compostable product types across retail, industrial, and agriculture." },
-    { title: "Dedicated Support", desc: "Personal account management and responsive customer support for every client." },
-  ];
-  const activeCards = (cards && cards.length > 0 && cards[0].title) ? cards : defaultCards;
-
+function WhyChoose({ content }: { content?: PageContent["home"]["whyChooseUs"] }) {
+  if (!content) return null;
   return (
     <section className="py-20 md:py-28 bg-brand-forest text-white relative overflow-hidden">
       <div className="absolute inset-0 opacity-5" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='2' fill='white'/%3E%3C/svg%3E")` }} />
       <div className="max-w-7xl mx-auto px-5 relative z-10">
         <FadeIn className="text-center max-w-2xl mx-auto mb-14">
           <span className="text-sm font-semibold text-brand-mint tracking-widest uppercase">Why Packin Club</span>
-          <h2 className="font-display text-3xl md:text-4xl font-bold mt-3 mb-4">The smart switch to compostable</h2>
-          <p className="text-brand-mint/80">Trusted by businesses across India to deliver sustainable packaging that performs.</p>
+          <h2 className="font-display text-3xl md:text-4xl font-bold mt-3 mb-4">{content.title}</h2>
+          <p className="text-brand-mint/80">{content.desc}</p>
         </FadeIn>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {activeCards.map((c, i) => (
+          {content.cards.map((c, i) => (
             <FadeIn key={i} delay={i * 0.08}>
               <div className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/15 transition-all h-full">
                 <h3 className="font-display text-xl font-semibold mb-3">{c.title || `Feature ${i+1}`}</h3>
-                <p className="text-sm text-white/80 leading-relaxed">{c.desc || "Description goes here..."}</p>
+                <p className="text-sm text-white/80 leading-relaxed">{c.desc}</p>
               </div>
             </FadeIn>
           ))}
@@ -270,23 +257,30 @@ function Stats() {
   );
 }
 
-function ProductLifeCycle({ image }: { image?: string }) {
-  if (!image) return null;
+function ProductLifeCycle({ content }: { content?: PageContent["home"]["productLifecycle"] }) {
+  if (!content) return null;
   return (
     <section className="py-20 md:py-28 bg-white border-t border-brand-pale overflow-hidden">
       <div className="max-w-6xl mx-auto px-5">
         <FadeIn className="text-center max-w-2xl mx-auto mb-14">
           <span className="text-sm font-semibold text-brand-leaf tracking-widest uppercase">From Earth to Earth</span>
           <h2 className="font-display text-3xl md:text-4xl font-bold text-brand-charcoal mt-3 mb-4">
-            Product Lifecycle
+            {content.title}
           </h2>
-          <p className="text-brand-gray text-lg">
-            Our compostable products decompose naturally within months, returning safely to the earth without leaving microplastics or toxins behind.
+          <p className="text-brand-gray text-lg whitespace-pre-line">
+            {content.desc}
           </p>
         </FadeIn>
         <FadeIn>
-          <div className="w-full rounded-3xl overflow-hidden border border-brand-pale/50 shadow-2xl shadow-brand-forest/5 flex items-center justify-center bg-brand-sand/30 p-2 md:p-6">
-            <img src={image} alt="Product Lifecycle" className="w-full h-auto object-contain rounded-2xl" />
+          <div className="w-full rounded-3xl overflow-hidden border border-brand-pale/50 flex items-center justify-center bg-brand-sand/30 p-2 md:p-6">
+            {content.image ? (
+              <img src={content.image} alt="Product Lifecycle" className="w-full h-auto object-contain rounded-2xl shadow-2xl shadow-brand-forest/5" />
+            ) : (
+              <div className="h-64 flex flex-col items-center justify-center text-brand-gray border-2 border-dashed border-brand-pale w-full rounded-2xl">
+                <span className="text-4xl mb-3">♻️</span>
+                <p>Upload a lifecycle image from dashboard</p>
+              </div>
+            )}
           </div>
         </FadeIn>
       </div>
@@ -370,9 +364,9 @@ function CTA() {
 }
 
 export default function HomePage() {
-  const [settings, setSettings] = useState<SiteSettings | null>(null);
+  const [content, setContent] = useState<PageContent | null>(null);
   useEffect(() => {
-    fetch("/api/admin/settings").then(r => r.json()).then(setSettings);
+    fetch("/api/admin/content").then(r => r.json()).then(setContent);
   }, []);
 
   const jsonLd = {
@@ -382,30 +376,24 @@ export default function HomePage() {
     "image": "https://packinclub.com/images/logo.png",
     "@id": "https://packinclub.com",
     "url": "https://packinclub.com",
-    "telephone": "+918178414360",
+    "telephone": content?.contact?.phone || "+918178414360",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "D-1/64, 21st Century Business Centre, Veer Savarkar Block, Shakarpur",
-      "addressLocality": "Nirman Vihar, Delhi",
-      "postalCode": "110092",
+      "streetAddress": content?.contact?.address || "Delhi",
       "addressCountry": "IN"
     },
-    "description": "India's trusted partner for sustainable, durable, and CPCB-certified eco-packaging solutions.",
-    "founder": [
-      { "@type": "Person", "name": "Vikas Jha" },
-      { "@type": "Person", "name": "Rajat Sharma" }
-    ]
+    "description": content?.home?.hero?.desc || "India's trusted partner for sustainable packaging solutions.",
   };
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <Hero />
-      <WhoWeAre image={settings?.whoWeAreImage} />
+      <Hero content={content?.home?.hero} />
+      <WhoWeAre content={content?.home?.whoWeAre} />
       <FeaturedProducts />
       <ComparisonTable />
-      <WhyChoose cards={settings?.whyChooseUsCards} />
-      <ProductLifeCycle image={settings?.productLifeCycleImage} />
+      <WhyChoose content={content?.home?.whyChooseUs} />
+      <ProductLifeCycle content={content?.home?.productLifecycle} />
       <Stats />
       <LatestBlogs />
       <CTA />

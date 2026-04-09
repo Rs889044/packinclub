@@ -3,14 +3,27 @@ import { useEffect, useState } from "react";
 
 export default function WhatsAppWidget() {
   const [isVisible, setIsVisible] = useState(false);
+  const [phone, setPhone] = useState("918178414360");
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
+    
+    // Fetch Settings for visibility toggle
     fetch("/api/admin/settings")
       .then(res => res.json())
       .then(data => {
         if (data.enableWhatsApp) {
           timer = setTimeout(() => setIsVisible(true), 500);
+        }
+      })
+      .catch(() => {});
+      
+    // Fetch Content for dynamic phone number
+    fetch("/api/admin/content")
+      .then(res => res.json())
+      .then(data => {
+        if (data?.contact?.phone) {
+          setPhone(data.contact.phone.replace(/\D/g, ""));
         }
       })
       .catch(() => {});
@@ -27,7 +40,7 @@ export default function WhatsAppWidget() {
       }`}
     >
       <a
-        href="https://wa.me/918178414360?text=Hi!%20I%20visited%20Packin%20Club%20and%20I%20have%20an%20enquiry."
+        href={`https://wa.me/${phone}?text=Hi!%20I%20visited%20Packin%20Club%20and%20I%20have%20an%20enquiry.`}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat with us on WhatsApp"

@@ -39,14 +39,34 @@ export interface Contact {
 export interface SiteSettings {
   favicon: string;
   enableWhatsApp: boolean;
-  whoWeAreImage: string;
-  productLifeCycleImage: string;
-  whyChooseUsCards: { title: string; desc: string }[];
   socialLinks: {
     facebook: string;
     twitter: string;
     instagram: string;
     linkedin: string;
     youtube: string;
+  };
+}
+
+export interface PageContent {
+  home: {
+    hero: { title: string; subtitle: string; desc: string };
+    whoWeAre: { title: string; desc: string; image: string };
+    whyChooseUs: { title: string; desc: string; cards: { title: string; desc: string }[] };
+    productLifecycle: { title: string; desc: string; image: string };
+  };
+  about: {
+    hero: { title: string; subtitle: string; desc: string };
+    story: { title: string; subtitle: string; p1: string; p2: string; p3: string; image: string };
+    founder: { quote: string; desc: string; name: string; role: string };
+    leadership: { title: string; team: { name: string; role: string; bio: string; image: string }[] };
+    philosophy: { title: string; desc: string; items: { icon: string; title: string; desc: string }[] };
+    mission: { title: string; desc: string };
+    vision: { title: string; desc: string };
+  };
+  contact: {
+    address: string;
+    phone: string;
+    email: string;
   };
 }

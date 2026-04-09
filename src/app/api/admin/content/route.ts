@@ -10,7 +10,7 @@ export async function PUT(request: Request) {
     const data = await request.json();
     saveContent(data);
     return NextResponse.json({ success: true, content: data });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to update content" }, { status: 500 });
   }
 }

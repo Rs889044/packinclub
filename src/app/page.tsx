@@ -211,16 +211,16 @@ function ComparisonTable() {
   );
 }
 
-function WhyChoose({ customImages }: { customImages?: string[] }) {
-  const images = customImages || ["", "", "", "", "", ""];
-  const features = [
-    { icon: "🌿", title: "100% Plant-Based", desc: "Every product is made from renewable, plant-derived materials that fully decompose." },
-    { icon: "💪", title: "Strength of Plastic", desc: "Our compostable products match the durability and performance of conventional plastic." },
-    { icon: "🏭", title: "CPCB-Certified", desc: "All manufacturing partners are CPCB-certified, meeting India's highest standards." },
-    { icon: "🎨", title: "Fully Customizable", desc: "Custom printing, sizing, and branding options for your unique business needs." },
-    { icon: "📦", title: "Widest Range in India", desc: "24+ compostable product types across retail, industrial, and agriculture." },
-    { icon: "🤝", title: "Dedicated Support", desc: "Personal account management and responsive customer support for every client." },
+function WhyChoose({ cards }: { cards?: { title: string; desc: string }[] }) {
+  const defaultCards = [
+    { title: "100% Plant-Based", desc: "Every product is made from renewable, plant-derived materials that fully decompose." },
+    { title: "Strength of Plastic", desc: "Our compostable products match the durability and performance of conventional plastic." },
+    { title: "CPCB-Certified", desc: "All manufacturing partners are CPCB-certified, meeting India's highest standards." },
+    { title: "Fully Customizable", desc: "Custom printing, sizing, and branding options for your unique business needs." },
+    { title: "Widest Range in India", desc: "24+ compostable product types across retail, industrial, and agriculture." },
+    { title: "Dedicated Support", desc: "Personal account management and responsive customer support for every client." },
   ];
+  const activeCards = (cards && cards.length > 0 && cards[0].title) ? cards : defaultCards;
 
   return (
     <section className="py-20 md:py-28 bg-brand-forest text-white relative overflow-hidden">
@@ -232,18 +232,11 @@ function WhyChoose({ customImages }: { customImages?: string[] }) {
           <p className="text-brand-mint/80">Trusted by businesses across India to deliver sustainable packaging that performs.</p>
         </FadeIn>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((f, i) => (
-            <FadeIn key={f.title} delay={i * 0.08}>
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/15 transition-all h-full">
-                {images[i] ? (
-                  <div className="w-12 h-12 rounded-xl overflow-hidden bg-white/20 mb-4 flex items-center justify-center">
-                    <img src={images[i]} alt={f.title} className="w-full h-full object-cover" />
-                  </div>
-                ) : (
-                  <span className="text-3xl block mb-4">{f.icon}</span>
-                )}
-                <h3 className="font-display text-lg font-semibold mb-2">{f.title}</h3>
-                <p className="text-sm text-white/70 leading-relaxed">{f.desc}</p>
+          {activeCards.map((c, i) => (
+            <FadeIn key={i} delay={i * 0.08}>
+              <div className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/15 transition-all h-full">
+                <h3 className="font-display text-xl font-semibold mb-3">{c.title || `Feature ${i+1}`}</h3>
+                <p className="text-sm text-white/80 leading-relaxed">{c.desc || "Description goes here..."}</p>
               </div>
             </FadeIn>
           ))}
@@ -411,7 +404,7 @@ export default function HomePage() {
       <WhoWeAre image={settings?.whoWeAreImage} />
       <FeaturedProducts />
       <ComparisonTable />
-      <WhyChoose customImages={settings?.whyChooseUsImages} />
+      <WhyChoose cards={settings?.whyChooseUsCards} />
       <ProductLifeCycle image={settings?.productLifeCycleImage} />
       <Stats />
       <LatestBlogs />

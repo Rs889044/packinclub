@@ -5,9 +5,11 @@ import type { SiteSettings } from "@/types";
 export default function SettingsPage() {
   const [settings, setSettings] = useState<SiteSettings>({
     favicon: "",
+    enableWhatsApp: false,
     whoWeAreImage: "",
     productLifeCycleImage: "",
-    whyChooseUsImages: ["", "", "", "", "", ""]
+    whyChooseUsCards: Array(6).fill({ title: "", desc: "" }),
+    socialLinks: { facebook: "", twitter: "", instagram: "", linkedin: "", youtube: "" }
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -22,9 +24,8 @@ export default function SettingsPage() {
       });
   }, []);
 
-  async function handleUpload(file: File, fieldKey: string, index?: number) {
-    const uploadId = index !== undefined ? `${fieldKey}-${index}` : fieldKey;
-    setUploading(uploadId);
+  async function handleUpload(file: File, fieldKey: keyof SiteSettings) {
+    setUploading(fieldKey);
     
     const formData = new FormData();
     formData.append("file", file);
@@ -34,13 +35,7 @@ export default function SettingsPage() {
       const data = await res.json();
       
       if (data.url) {
-        if (index !== undefined) {
-          const newArr = [...settings.whyChooseUsImages];
-          newArr[index] = data.url;
-          setSettings({ ...settings, whyChooseUsImages: newArr });
-        } else {
-          setSettings({ ...settings, [fieldKey]: data.url });
-        }
+        setSettings({ ...settings, [fieldKey]: data.url });
       }
     } catch (err) {
       console.error("Upload failed", err);
@@ -60,19 +55,13 @@ export default function SettingsPage() {
     // Optional: show a success toast here
   }
 
-  function removeImage(fieldKey: string, index?: number) {
-    if (index !== undefined) {
-      const newArr = [...settings.whyChooseUsImages];
-      newArr[index] = "";
-      setSettings({ ...settings, whyChooseUsImages: newArr });
-    } else {
-      setSettings({ ...settings, [fieldKey]: "" });
-    }
+  function removeImage(fieldKey: keyof SiteSettings) {
+    setSettings({ ...settings, [fieldKey]: "" });
   }
 
-  const renderUploadBox = (label: string, fieldKey: keyof SiteSettings, index?: number) => {
-    const currentValue = index !== undefined ? settings.whyChooseUsImages[index] : settings[fieldKey as keyof typeof settings] as string;
-    const isUploading = uploading === (index !== undefined ? `${fieldKey}-${index}` : fieldKey);
+  const renderUploadBox = (label: string, fieldKey: keyof SiteSettings) => {
+    const currentValue = settings[fieldKey] as string;
+    const isUploading = uploading === fieldKey;
 
     return (
       <div className="bg-brand-sand/50 p-4 rounded-xl border border-brand-pale">
@@ -80,12 +69,12 @@ export default function SettingsPage() {
         {currentValue ? (
           <div className="relative w-full aspect-square md:aspect-auto md:h-32 rounded-xl overflow-hidden border border-brand-pale bg-white flex items-center justify-center">
             <img src={currentValue} alt={label} className="max-w-full max-h-full object-contain" />
-            <button type="button" onClick={() => removeImage(fieldKey, index)}
+            <button type="button" onClick={() => removeImage(fieldKey)}
               className="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full text-xs flex items-center justify-center hover:bg-red-600 shadow-sm">✕</button>
           </div>
         ) : (
           <label className="block w-full h-32 border-2 border-dashed border-brand-pale rounded-xl flex items-center justify-center cursor-pointer hover:border-brand-forest/30 bg-white transition-all text-center px-4">
-            <input type="file" accept="image/*" className="hidden" onChange={(e) => { if (e.target.files?.[0]) handleUpload(e.target.files[0], fieldKey, index); }} />
+            <input type="file" accept="image/*" className="hidden" onChange={(e) => { if (e.target.files?.[0]) handleUpload(e.target.files[0], fieldKey); }} />
             {isUploading ? (
               <div className="flex flex-col items-center gap-2 text-brand-gray text-sm">
                 <div className="w-5 h-5 border-2 border-brand-forest border-t-transparent rounded-full animate-spin" />
@@ -173,15 +162,61 @@ export default function SettingsPage() {
           </div>
 
           <div className="pt-6 border-t border-brand-pale">
-            <h3 className="text-sm font-semibold text-brand-charcoal mb-4">&quot;Why Choose Us&quot; Card Images</h3>
-            <p className="text-xs text-brand-gray mb-4">Upload custom images/icons for the 6 feature cards.</p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {renderUploadBox("Card 1 (Plant-Based)", "whyChooseUsImages", 0)}
-              {renderUploadBox("Card 2 (Strength)", "whyChooseUsImages", 1)}
-              {renderUploadBox("Card 3 (Certified)", "whyChooseUsImages", 2)}
-              {renderUploadBox("Card 4 (Customizable)", "whyChooseUsImages", 3)}
-              {renderUploadBox("Card 5 (Widest Range)", "whyChooseUsImages", 4)}
-              {renderUploadBox("Card 6 (Support)", "whyChooseUsImages", 5)}
+            <h3 className="text-sm font-semibold text-brand-charcoal mb-4">Social Media Links</h3>
+            <p className="text-xs text-brand-gray mb-4">Add your social media URLs to display them in the website footer.</p>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {['facebook', 'twitter', 'instagram', 'linkedin', 'youtube'].map((p) => (
+                <div key={p} className="flex gap-2 items-center bg-brand-sand/50 rounded-lg p-2 border border-brand-pale">
+                  <span className="text-xs font-bold text-brand-charcoal uppercase w-20 px-2">{p}</span>
+                  <input
+                    type="url"
+                    placeholder={`https://${p}.com/...`}
+                    value={settings.socialLinks?.[p as keyof typeof settings.socialLinks] || ""}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      socialLinks: { ...settings.socialLinks, [p]: e.target.value }
+                    })}
+                    className="flex-1 px-3 py-2 text-sm rounded-md border border-brand-pale"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="pt-6 border-t border-brand-pale">
+            <h3 className="text-sm font-semibold text-brand-charcoal mb-4">&quot;Why Choose Us&quot; Cards</h3>
+            <p className="text-xs text-brand-gray mb-4">Edit the text for the 6 feature cards on the homepage.</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {settings.whyChooseUsCards?.map((card, i) => (
+                <div key={i} className="bg-brand-sand/50 p-4 rounded-xl border border-brand-pale space-y-3">
+                  <div>
+                    <label className="block text-xs font-bold text-brand-charcoal mb-1">Card {i + 1} Title</label>
+                    <input
+                      type="text"
+                      value={card.title}
+                      onChange={(e) => {
+                        const newCards = [...settings.whyChooseUsCards];
+                        newCards[i].title = e.target.value;
+                        setSettings({ ...settings, whyChooseUsCards: newCards });
+                      }}
+                      className="w-full px-3 py-2 text-sm rounded-lg border border-brand-pale font-medium text-brand-charcoal"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-brand-charcoal mb-1">Description</label>
+                    <textarea
+                      rows={2}
+                      value={card.desc}
+                      onChange={(e) => {
+                        const newCards = [...settings.whyChooseUsCards];
+                        newCards[i].desc = e.target.value;
+                        setSettings({ ...settings, whyChooseUsCards: newCards });
+                      }}
+                      className="w-full px-3 py-2 text-sm rounded-lg border border-brand-pale resize-none"
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 

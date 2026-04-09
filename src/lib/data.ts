@@ -13,7 +13,21 @@ const defaultSettings: SiteSettings = {
   enableWhatsApp: false,
   whoWeAreImage: "",
   productLifeCycleImage: "",
-  whyChooseUsImages: ["", "", "", "", "", ""]
+  whyChooseUsCards: [
+    { title: "100% Plant-Based", desc: "Every product is made from renewable, plant-derived materials that fully decompose." },
+    { title: "Strength of Plastic", desc: "Our compostable products match the durability and performance of conventional plastic." },
+    { title: "CPCB-Certified", desc: "All manufacturing partners are CPCB-certified, meeting India's highest standards." },
+    { title: "Fully Customizable", desc: "Custom printing, sizing, and branding options for your unique business needs." },
+    { title: "Widest Range in India", desc: "24+ compostable product types across retail, industrial, and agriculture." },
+    { title: "Dedicated Support", desc: "Personal account management and responsive customer support for every client." }
+  ],
+  socialLinks: {
+    facebook: "",
+    twitter: "",
+    instagram: "",
+    linkedin: "",
+    youtube: ""
+  }
 };
 
 function ensureDir() {

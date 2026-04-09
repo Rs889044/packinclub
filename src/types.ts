@@ -41,5 +41,12 @@ export interface SiteSettings {
   enableWhatsApp: boolean;
   whoWeAreImage: string;
   productLifeCycleImage: string;
-  whyChooseUsImages: string[];
+  whyChooseUsCards: { title: string; desc: string }[];
+  socialLinks: {
+    facebook: string;
+    twitter: string;
+    instagram: string;
+    linkedin: string;
+    youtube: string;
+  };
 }

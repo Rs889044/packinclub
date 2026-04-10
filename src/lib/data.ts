@@ -78,6 +78,12 @@ const defaultContent: PageContent = {
     address: "D-1/64, 21st Century Business Centre, Veer Savarkar Block, Shakarpur, Nirman Vihar, Delhi-110092",
     phone: "+91 81784 14360",
     email: "orders@packinclub.com"
+  },
+  products: {
+    hero: { title: "India's widest range of <span class=\"text-brand-forest italic\">compostable</span> packaging", desc: "Explore plant-based, CPCB-certified packaging products designed to replace single-use plastic across every industry." }
+  },
+  blog: {
+    hero: { title: "Insights for a <span class=\"text-brand-forest italic\">sustainable</span> future", desc: "Expert articles on compostable packaging, sustainability trends, industry insights, and the science behind going plastic-free." }
   }
 };
 

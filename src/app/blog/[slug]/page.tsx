@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getBlogs } from "@/lib/data";
 import BlogPostClient from "./BlogPostClient";
+import ShareButtons from "@/components/ShareButtons";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -31,10 +32,10 @@ export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
   const blogs = getBlogs();
   const post = blogs.find((b) => b.slug === slug);
-  if (!post) notFound();
+  if (!post || (post.status || "published") === "draft") notFound();
 
   const related = blogs
-    .filter((b) => b.category === post.category && b.id !== post.id)
+    .filter((b) => b.category === post.category && b.id !== post.id && (b.status || "published") === "published")
     .slice(0, 3);
 
   const formatDate = (dateStr: string) =>
@@ -94,7 +95,7 @@ export default async function BlogPostPage({ params }: Props) {
           <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-brand-charcoal leading-tight mb-6">
             {post.title}
           </h1>
-          <div className="flex items-center gap-4 text-sm text-brand-gray">
+          <div className="flex items-center gap-4 text-sm text-brand-gray mb-4">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-brand-forest/10 flex items-center justify-center text-xs">🌿</div>
               <span className="font-medium">{post.author}</span>
@@ -102,6 +103,14 @@ export default async function BlogPostPage({ params }: Props) {
             <span className="w-1 h-1 rounded-full bg-brand-gray/40" />
             <span>{formatDate(post.date)}</span>
           </div>
+          {post.tags && post.tags.length > 0 && (
+            <div className="flex gap-2 flex-wrap mb-4">
+              {post.tags.map(tag => (
+                <span key={tag} className="text-xs font-medium px-3 py-1 rounded-full bg-brand-forest/5 text-brand-forest border border-brand-forest/10">{tag}</span>
+              ))}
+            </div>
+          )}
+          <ShareButtons url={`https://packinclub.com/blog/${slug}`} title={post.title} />
         </div>
       </section>
 

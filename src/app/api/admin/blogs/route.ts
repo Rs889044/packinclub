@@ -9,7 +9,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { title, slug, excerpt, content, category, date, author, thumbnail } = body;
+    const { title, slug, excerpt, content, category, date, author, thumbnail, tags, status } = body;
 
     if (!title || !content || !category) {
       return NextResponse.json({ error: "Title, content, and category are required" }, { status: 400 });
@@ -25,9 +25,11 @@ export async function POST(request: Request) {
       excerpt: excerpt || "",
       content,
       category,
+      tags: tags || [],
       date: date || new Date().toISOString().split("T")[0],
       author: author || "Packin Club",
       thumbnail: thumbnail || "",
+      status: status || "published",
     };
 
     blogs.push(newBlog);

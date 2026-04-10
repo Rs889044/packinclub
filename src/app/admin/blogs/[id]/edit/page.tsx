@@ -13,6 +13,7 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
   const [fetching, setFetching] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [thumbnailUrl, setThumbnailUrl] = useState("");
+  const [tagInput, setTagInput] = useState("");
   const [form, setForm] = useState({
     title: "",
     slug: "",
@@ -21,6 +22,8 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
     category: categories[0],
     author: "Packin Club",
     date: "",
+    tags: [] as string[],
+    status: "published" as "draft" | "published",
   });
 
   useEffect(() => {
@@ -37,6 +40,8 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
             category: b.category,
             author: b.author,
             date: b.date,
+            tags: b.tags || [],
+            status: b.status || "published",
           });
           setThumbnailUrl(b.thumbnail || "");
         }
@@ -46,6 +51,18 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
 
   function updateField(field: string, value: string) {
     setForm(prev => ({ ...prev, [field]: value }));
+  }
+
+  function addTag() {
+    const tag = tagInput.trim();
+    if (tag && !form.tags.includes(tag)) {
+      setForm(prev => ({ ...prev, tags: [...prev.tags, tag] }));
+    }
+    setTagInput("");
+  }
+
+  function removeTag(tag: string) {
+    setForm(prev => ({ ...prev, tags: prev.tags.filter(t => t !== tag) }));
   }
 
   async function handleThumbnailUpload(file: File) {
@@ -110,7 +127,8 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
               className="w-full px-4 py-3 rounded-xl bg-brand-sand border border-brand-pale focus:border-brand-forest focus:ring-2 focus:ring-brand-forest/20 outline-none text-sm transition-all text-brand-gray" />
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-5">
+          {/* Category, Date & Status */}
+          <div className="grid sm:grid-cols-3 gap-5">
             <div>
               <label htmlFor="category" className="block text-sm font-medium text-brand-charcoal mb-2">Category</label>
               <select id="category" value={form.category} onChange={(e) => updateField("category", e.target.value)}
@@ -123,12 +141,40 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
               <input type="date" id="date" value={form.date} onChange={(e) => updateField("date", e.target.value)}
                 className="w-full px-4 py-3 rounded-xl bg-brand-sand border border-brand-pale focus:border-brand-forest focus:ring-2 focus:ring-brand-forest/20 outline-none text-sm transition-all" />
             </div>
+            <div>
+              <label htmlFor="status" className="block text-sm font-medium text-brand-charcoal mb-2">Status</label>
+              <select id="status" value={form.status} onChange={(e) => setForm(f => ({ ...f, status: e.target.value as "draft" | "published" }))}
+                className="w-full px-4 py-3 rounded-xl bg-brand-sand border border-brand-pale focus:border-brand-forest focus:ring-2 focus:ring-brand-forest/20 outline-none text-sm transition-all">
+                <option value="published">Published</option>
+                <option value="draft">Draft</option>
+              </select>
+            </div>
           </div>
 
           <div>
             <label htmlFor="author" className="block text-sm font-medium text-brand-charcoal mb-2">Author</label>
             <input type="text" id="author" value={form.author} onChange={(e) => updateField("author", e.target.value)}
               className="w-full px-4 py-3 rounded-xl bg-brand-sand border border-brand-pale focus:border-brand-forest focus:ring-2 focus:ring-brand-forest/20 outline-none text-sm transition-all" />
+          </div>
+
+          {/* Tags */}
+          <div>
+            <label className="block text-sm font-medium text-brand-charcoal mb-2">Tags</label>
+            <div className="flex gap-2 mb-2 flex-wrap">
+              {form.tags.map(tag => (
+                <span key={tag} className="inline-flex items-center gap-1 px-3 py-1 bg-brand-forest/5 text-brand-forest text-xs font-medium rounded-full border border-brand-forest/15">
+                  {tag}
+                  <button type="button" onClick={() => removeTag(tag)} className="hover:text-red-500 transition-colors">×</button>
+                </span>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <input type="text" value={tagInput} onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); addTag(); } }}
+                placeholder="Add a tag and press Enter"
+                className="flex-1 px-4 py-2.5 rounded-xl bg-brand-sand border border-brand-pale focus:border-brand-forest outline-none text-sm transition-all" />
+              <button type="button" onClick={addTag} className="px-4 py-2.5 bg-brand-pale text-brand-gray rounded-xl text-sm font-medium hover:bg-brand-sand transition-colors">Add</button>
+            </div>
           </div>
 
           <div>

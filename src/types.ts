@@ -19,10 +19,12 @@ export interface Blog {
   slug: string;
   excerpt: string;
   category: string;
+  tags: string[];
   date: string;
   author: string;
   content: string;
   thumbnail?: string;
+  status: "draft" | "published";
 }
 
 export interface Contact {
@@ -104,5 +106,11 @@ export interface PageContent {
     address: string;
     phone: string;
     email: string;
+  };
+  products: {
+    hero: { title: string; desc: string };
+  };
+  blog: {
+    hero: { title: string; desc: string };
   };
 }

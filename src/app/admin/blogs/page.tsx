@@ -68,10 +68,23 @@ export default function AdminBlogsPage() {
             </thead>
             <tbody className="divide-y divide-brand-pale">
               {blogs.map((b) => (
-                <tr key={b.id} className="hover:bg-brand-sand/30 transition-colors">
+                <tr key={b.id} className={`hover:bg-brand-sand/30 transition-colors ${(b.status || "published") === "draft" ? "bg-amber-50/30" : ""}`}>
                   <td className="px-6 py-4">
-                    <div className="font-medium text-brand-charcoal max-w-[280px] truncate">{b.title}</div>
+                    <div className="flex items-center gap-2">
+                      <div className="font-medium text-brand-charcoal max-w-[240px] truncate">{b.title}</div>
+                      {(b.status || "published") === "draft" && (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Draft</span>
+                      )}
+                    </div>
                     <div className="text-xs text-brand-gray mt-0.5 truncate max-w-[280px]">{b.excerpt}</div>
+                    {b.tags && b.tags.length > 0 && (
+                      <div className="flex gap-1 mt-1.5 flex-wrap">
+                        {b.tags.slice(0, 3).map(t => (
+                          <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-brand-forest/5 text-brand-forest">{t}</span>
+                        ))}
+                        {b.tags.length > 3 && <span className="text-[10px] text-brand-gray">+{b.tags.length - 3}</span>}
+                      </div>
+                    )}
                   </td>
                   <td className="px-6 py-4 hidden md:table-cell">
                     <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${categoryColors[b.category] || "bg-gray-50 text-gray-700"}`}>{b.category}</span>

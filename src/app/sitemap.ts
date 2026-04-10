@@ -47,12 +47,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  const blogPages: MetadataRoute.Sitemap = blogs.map((b) => ({
-    url: `${BASE_URL}/blog/${b.slug}`,
-    lastModified: new Date(b.date),
-    changeFrequency: "yearly" as const,
-    priority: 0.6,
-  }));
+  const blogPages: MetadataRoute.Sitemap = blogs
+    .filter(b => (b.status || "published") === "published")
+    .map((b) => ({
+      url: `${BASE_URL}/blog/${b.slug}`,
+      lastModified: new Date(b.date),
+      changeFrequency: "yearly" as const,
+      priority: 0.6,
+    }));
 
   return [...staticPages, ...productPages, ...blogPages];
 }

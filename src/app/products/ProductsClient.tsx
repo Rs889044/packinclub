@@ -17,9 +17,11 @@ const categoryIcons: Record<string, string> = {
 interface ProductsClientProps {
   products: Product[];
   catalogPdf: string;
+  heroTitle?: string;
+  heroDesc?: string;
 }
 
-export default function ProductsClient({ products, catalogPdf }: ProductsClientProps) {
+export default function ProductsClient({ products, catalogPdf, heroTitle, heroDesc }: ProductsClientProps) {
   const [active, setActive] = useState("All");
 
   const filtered = active === "All" ? products : products.filter((p) => p.category === active);
@@ -32,11 +34,12 @@ export default function ProductsClient({ products, catalogPdf }: ProductsClientP
         <div className="max-w-7xl mx-auto px-5 relative z-10">
           <FadeIn className="text-center max-w-3xl mx-auto">
             <span className="text-sm font-semibold text-brand-leaf tracking-widest uppercase">Our Products</span>
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-brand-charcoal mt-3 mb-6">
-              India&apos;s widest range of <span className="text-brand-forest italic">compostable</span> packaging
-            </h1>
+            <h1
+              className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-brand-charcoal mt-3 mb-6"
+              dangerouslySetInnerHTML={{ __html: heroTitle || "India&apos;s widest range of <span class=\"text-brand-forest italic\">compostable</span> packaging" }}
+            />
             <p className="text-lg text-brand-gray leading-relaxed">
-              Explore {products.length} plant-based, CPCB-certified packaging products designed to replace single-use plastic across every industry.
+              {heroDesc || `Explore ${products.length} plant-based, CPCB-certified packaging products designed to replace single-use plastic across every industry.`}
             </p>
           </FadeIn>
         </div>

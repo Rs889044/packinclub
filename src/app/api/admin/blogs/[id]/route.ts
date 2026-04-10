@@ -22,9 +22,11 @@ export async function PUT(request: Request, { params }: Props) {
       excerpt: body.excerpt ?? blogs[index].excerpt,
       content: body.content ?? blogs[index].content,
       category: body.category ?? blogs[index].category,
+      tags: body.tags ?? blogs[index].tags ?? [],
       date: body.date ?? blogs[index].date,
       author: body.author ?? blogs[index].author,
       thumbnail: body.thumbnail ?? blogs[index].thumbnail,
+      status: body.status ?? blogs[index].status ?? "published",
     };
 
     saveBlogs(blogs);

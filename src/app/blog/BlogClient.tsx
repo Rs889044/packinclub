@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import FadeIn from "@/components/FadeIn";
@@ -20,15 +20,49 @@ function formatDate(dateStr: string) {
   });
 }
 
+const POSTS_PER_PAGE = 9;
+
 interface BlogClientProps {
   blogs: Blog[];
+  heroTitle?: string;
+  heroDesc?: string;
 }
 
-export default function BlogClient({ blogs }: BlogClientProps) {
+export default function BlogClient({ blogs, heroTitle, heroDesc }: BlogClientProps) {
   const [active, setActive] = useState("All");
+  const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE);
 
-  const categories = ["All", ...Array.from(new Set(blogs.map((b) => b.category)))];
-  const filtered = active === "All" ? blogs : blogs.filter((b) => b.category === active);
+  // Only show published blogs
+  const published = useMemo(() => blogs.filter(b => (b.status || "published") === "published"), [blogs]);
+
+  const categories = ["All", ...Array.from(new Set(published.map((b) => b.category)))];
+
+  // Collect all unique tags
+  const allTags = useMemo(() => {
+    const tags = new Set<string>();
+    published.forEach(b => (b.tags || []).forEach(t => tags.add(t)));
+    return Array.from(tags).sort();
+  }, [published]);
+
+  const filtered = useMemo(() => {
+    let result = published;
+    if (active !== "All") result = result.filter((b) => b.category === active);
+    if (activeTag) result = result.filter(b => (b.tags || []).includes(activeTag));
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      result = result.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        b.excerpt.toLowerCase().includes(q) ||
+        (b.tags || []).some(t => t.toLowerCase().includes(q))
+      );
+    }
+    return result;
+  }, [published, active, activeTag, search]);
+
+  const visible = filtered.slice(0, visibleCount);
+  const hasMore = visibleCount < filtered.length;
 
   return (
     <>
@@ -38,11 +72,12 @@ export default function BlogClient({ blogs }: BlogClientProps) {
         <div className="max-w-7xl mx-auto px-5 relative z-10">
           <FadeIn className="text-center max-w-3xl mx-auto">
             <span className="text-sm font-semibold text-brand-leaf tracking-widest uppercase">Blog &amp; Resources</span>
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-brand-charcoal mt-3 mb-6">
-              Insights for a <span className="text-brand-forest italic">sustainable</span> future
-            </h1>
+            <h1
+              className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-brand-charcoal mt-3 mb-6"
+              dangerouslySetInnerHTML={{ __html: heroTitle || "Insights for a <span class=\"text-brand-forest italic\">sustainable</span> future" }}
+            />
             <p className="text-lg text-brand-gray leading-relaxed">
-              Expert articles on compostable packaging, sustainability trends, industry insights, and the science behind going plastic-free.
+              {heroDesc || "Expert articles on compostable packaging, sustainability trends, industry insights, and the science behind going plastic-free."}
             </p>
           </FadeIn>
         </div>
@@ -51,13 +86,32 @@ export default function BlogClient({ blogs }: BlogClientProps) {
       {/* Filter + Grid */}
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-5">
+          {/* Search */}
+          <FadeIn className="mb-8">
+            <div className="max-w-md mx-auto relative">
+              <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-gray" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => { setSearch(e.target.value); setVisibleCount(POSTS_PER_PAGE); }}
+                placeholder="Search articles..."
+                className="w-full pl-11 pr-4 py-3 rounded-full bg-brand-sand border border-brand-pale focus:border-brand-forest focus:ring-2 focus:ring-brand-forest/20 outline-none text-sm transition-all"
+              />
+              {search && (
+                <button onClick={() => setSearch("")} className="absolute right-4 top-1/2 -translate-y-1/2 text-brand-gray hover:text-brand-charcoal transition-colors">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+              )}
+            </div>
+          </FadeIn>
+
           {/* Category tabs */}
-          <FadeIn className="mb-12">
+          <FadeIn className="mb-6">
             <div className="flex flex-wrap justify-center gap-3">
               {categories.map((cat) => (
                 <button
                   key={cat}
-                  onClick={() => setActive(cat)}
+                  onClick={() => { setActive(cat); setVisibleCount(POSTS_PER_PAGE); }}
                   className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
                     active === cat
                       ? "bg-brand-forest text-white shadow-md shadow-brand-forest/20"
@@ -70,16 +124,39 @@ export default function BlogClient({ blogs }: BlogClientProps) {
             </div>
           </FadeIn>
 
+          {/* Tags */}
+          {allTags.length > 0 && (
+            <FadeIn className="mb-8">
+              <div className="flex flex-wrap justify-center gap-2">
+                {allTags.map(tag => (
+                  <button
+                    key={tag}
+                    onClick={() => { setActiveTag(activeTag === tag ? null : tag); setVisibleCount(POSTS_PER_PAGE); }}
+                    className={`px-3 py-1 rounded-full text-xs font-medium transition-all border ${
+                      activeTag === tag
+                        ? "bg-brand-forest text-white border-brand-forest"
+                        : "bg-brand-forest/5 text-brand-forest border-brand-forest/15 hover:bg-brand-forest/10"
+                    }`}
+                  >
+                    #{tag}
+                  </button>
+                ))}
+              </div>
+            </FadeIn>
+          )}
+
           {/* Post count */}
           <p className="text-sm text-brand-gray mb-8 text-center">
             {filtered.length} article{filtered.length !== 1 ? "s" : ""}
             {active !== "All" && <> in <span className="font-semibold text-brand-forest">{active}</span></>}
+            {activeTag && <> tagged <span className="font-semibold text-brand-forest">#{activeTag}</span></>}
+            {search && <> matching &ldquo;<span className="font-semibold text-brand-charcoal">{search}</span>&rdquo;</>}
           </p>
 
           {/* Grid */}
           <motion.div layout className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             <AnimatePresence mode="popLayout">
-              {filtered.map((post, i) => (
+              {visible.map((post, i) => (
                 <motion.div
                   key={post.id}
                   layout
@@ -114,10 +191,17 @@ export default function BlogClient({ blogs }: BlogClientProps) {
                         <h2 className="font-display text-lg font-bold text-brand-charcoal mb-3 group-hover:text-brand-forest transition-colors leading-snug">
                           {post.title}
                         </h2>
-                        <p className="text-sm text-brand-gray leading-relaxed flex-1 mb-4">
+                        <p className="text-sm text-brand-gray leading-relaxed flex-1 mb-3">
                           {post.excerpt}
                         </p>
-                        <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-forest group-hover:gap-2.5 transition-all">
+                        {post.tags && post.tags.length > 0 && (
+                          <div className="flex gap-1.5 flex-wrap mb-3">
+                            {post.tags.slice(0, 3).map(t => (
+                              <span key={t} className="text-[10px] px-2 py-0.5 rounded-full bg-brand-forest/5 text-brand-forest">#{t}</span>
+                            ))}
+                          </div>
+                        )}
+                        <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-forest group-hover:gap-2.5 transition-all mt-auto">
                           Read More
                           <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                         </span>
@@ -128,6 +212,18 @@ export default function BlogClient({ blogs }: BlogClientProps) {
               ))}
             </AnimatePresence>
           </motion.div>
+
+          {/* Load More */}
+          {hasMore && (
+            <div className="flex justify-center mt-12">
+              <button
+                onClick={() => setVisibleCount(prev => prev + POSTS_PER_PAGE)}
+                className="px-8 py-3 bg-brand-forest/5 text-brand-forest font-semibold rounded-full border border-brand-forest/15 hover:bg-brand-forest/10 transition-colors text-sm"
+              >
+                Load More Articles ({filtered.length - visibleCount} remaining)
+              </button>
+            </div>
+          )}
         </div>
       </section>
 

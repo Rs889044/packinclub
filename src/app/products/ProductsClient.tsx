@@ -16,9 +16,10 @@ const categoryIcons: Record<string, string> = {
 
 interface ProductsClientProps {
   products: Product[];
+  catalogPdf: string;
 }
 
-export default function ProductsClient({ products }: ProductsClientProps) {
+export default function ProductsClient({ products, catalogPdf }: ProductsClientProps) {
   const [active, setActive] = useState("All");
 
   const filtered = active === "All" ? products : products.filter((p) => p.category === active);
@@ -82,7 +83,6 @@ export default function ProductsClient({ products }: ProductsClientProps) {
                   transition={{ duration: 0.3 }}
                 >
                   <Link href={`/product/${p.slug}`} className="group bg-brand-cream rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-brand-forest/5 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col block">
-                    {/* Image or placeholder */}
                     <div className="aspect-square bg-gradient-to-br from-brand-pale via-brand-mint/20 to-brand-leaf/10 flex items-center justify-center relative overflow-hidden">
                       {p.image ? (
                         <img src={p.image} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
@@ -95,8 +95,6 @@ export default function ProductsClient({ products }: ProductsClientProps) {
                         {p.category}
                       </span>
                     </div>
-
-                    {/* Content */}
                     <div className="p-5 flex flex-col flex-1">
                       <h3 className="font-display text-lg font-semibold text-brand-charcoal mb-2 group-hover:text-brand-forest transition-colors">
                         {p.name}
@@ -114,6 +112,21 @@ export default function ProductsClient({ products }: ProductsClientProps) {
               ))}
             </AnimatePresence>
           </motion.div>
+
+          {catalogPdf && (
+            <div className="flex justify-center mt-10">
+              <a
+                href={catalogPdf}
+                download
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold text-brand-forest bg-brand-forest/5 border border-brand-forest/15 rounded-full hover:bg-brand-forest/10 transition-colors"
+              >
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                Download Catalog
+              </a>
+            </div>
+          )}
         </div>
       </section>
 

@@ -16,6 +16,7 @@ const defaultSettings: SiteSettings = {
   favicon: "",
   enableWhatsApp: false,
   enableCallback: false,
+  catalogPdf: "",
   socialLinks: {
     facebook: "",
     twitter: "",

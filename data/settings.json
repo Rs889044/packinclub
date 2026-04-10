@@ -1,7 +1,8 @@
 {
   "favicon": "/uploads/1000028519-1775764571257.jpg",
-  "enableWhatsApp": true,
-  "enableCallback": true,
+  "enableWhatsApp": false,
+  "enableCallback": false,
+  "catalogPdf": "/uploads/packinclub-b2b-catalogue-1775846186343.pdf",
   "socialLinks": {
     "facebook": "",
     "twitter": "",

@@ -7,6 +7,7 @@ export default function SettingsPage() {
     favicon: "",
     enableWhatsApp: false,
     enableCallback: false,
+    catalogPdf: "",
     socialLinks: { facebook: "", twitter: "", instagram: "", linkedin: "", youtube: "" }
   });
   const [loading, setLoading] = useState(true);
@@ -156,7 +157,51 @@ export default function SettingsPage() {
           </label>
         </div>
 
-        {/* Social Links */}
+        {/* Product Catalog PDF */}
+        <div className="bg-white rounded-2xl border border-brand-pale p-6 space-y-4">
+          <h2 className="font-display text-lg font-bold text-brand-charcoal border-b border-brand-pale pb-4">Downloadable Product Catalog</h2>
+          <p className="text-xs text-brand-gray">Upload a PDF catalog that visitors can download from the Products page. This helps capture leads and enables offline sales conversations.</p>
+          
+          {settings.catalogPdf ? (
+            <div className="flex items-center gap-4 p-4 bg-brand-sand/50 rounded-xl border border-brand-pale">
+              <div className="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center text-xl shrink-0">📄</div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-brand-charcoal truncate">Product Catalog</p>
+                <a href={settings.catalogPdf} target="_blank" rel="noopener noreferrer" className="text-xs text-brand-forest hover:underline truncate block">{settings.catalogPdf}</a>
+              </div>
+              <button type="button" onClick={() => setSettings({ ...settings, catalogPdf: "" })}
+                className="px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors shrink-0">Remove</button>
+            </div>
+          ) : (
+            <label className="block w-full border-2 border-dashed border-brand-pale rounded-xl p-6 text-center cursor-pointer hover:border-brand-forest/30 bg-brand-sand/20 transition-all">
+              <input type="file" accept=".pdf" className="hidden" onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                setUploading('catalogPdf' as keyof SiteSettings);
+                const formData = new FormData();
+                formData.append('file', file);
+                try {
+                  const res = await fetch('/api/admin/upload', { method: 'POST', body: formData });
+                  const data = await res.json();
+                  if (data.url) setSettings(s => ({ ...s, catalogPdf: data.url }));
+                } catch (err) { console.error('Upload failed', err); }
+                setUploading(null);
+              }} />
+              {uploading === ('catalogPdf' as keyof SiteSettings) ? (
+                <div className="flex flex-col items-center gap-2 text-brand-gray text-sm">
+                  <div className="w-5 h-5 border-2 border-brand-forest border-t-transparent rounded-full animate-spin" />
+                  Uploading...
+                </div>
+              ) : (
+                <div>
+                  <div className="text-2xl mb-2">📎</div>
+                  <p className="text-sm font-medium text-brand-charcoal">Upload Product Catalog (PDF)</p>
+                  <p className="text-xs text-brand-gray mt-1">Max recommended size: 10MB</p>
+                </div>
+              )}
+            </label>
+          )}
+        </div>
         <div className="bg-white rounded-2xl border border-brand-pale p-6 space-y-6">
             <h3 className="text-sm font-semibold text-brand-charcoal mb-4">Social Media Links</h3>
             <p className="text-xs text-brand-gray mb-4">Add your social media URLs to display them in the website footer.</p>

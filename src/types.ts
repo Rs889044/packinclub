@@ -74,6 +74,7 @@ export interface SiteSettings {
   favicon: string;
   enableWhatsApp: boolean;
   enableCallback: boolean;
+  catalogPdf: string;
   socialLinks: {
     facebook: string;
     twitter: string;

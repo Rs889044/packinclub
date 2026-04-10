@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getProducts } from "@/lib/data";
+import { getProducts, getSettings } from "@/lib/data";
 import ProductsClient from "./ProductsClient";
 
 export const metadata: Metadata = {
@@ -15,5 +15,6 @@ export const metadata: Metadata = {
 
 export default function ProductsPage() {
   const products = getProducts();
-  return <ProductsClient products={products} />;
+  const settings = getSettings();
+  return <ProductsClient products={products} catalogPdf={settings.catalogPdf} />;
 }

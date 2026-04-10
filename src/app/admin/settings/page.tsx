@@ -6,6 +6,7 @@ export default function SettingsPage() {
   const [settings, setSettings] = useState<SiteSettings>({
     favicon: "",
     enableWhatsApp: false,
+    enableCallback: false,
     socialLinks: { facebook: "", twitter: "", instagram: "", linkedin: "", youtube: "" }
   });
   const [loading, setLoading] = useState(true);
@@ -133,6 +134,24 @@ export default function SettingsPage() {
             <div>
               <span className="block text-sm font-semibold text-brand-charcoal">Enable Floating WhatsApp Chat</span>
               <span className="block text-xs text-brand-gray mt-0.5">Show the sticky WhatsApp contact button across all public pages.</span>
+            </div>
+          </label>
+
+          <label className="flex items-center gap-4 cursor-pointer mt-3 p-4 border border-brand-pale rounded-xl bg-brand-sand/30 hover:bg-brand-sand/50 transition-colors">
+            <div className="relative">
+              <input
+                type="checkbox"
+                checked={settings.enableCallback}
+                onChange={(e) => setSettings({ ...settings, enableCallback: e.target.checked })}
+                className="sr-only"
+              />
+              <div className={`w-11 h-6 rounded-full transition-colors ${settings.enableCallback ? "bg-brand-forest" : "bg-brand-pale"}`}>
+                <div className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform mt-0.5 ${settings.enableCallback ? "translate-x-[22px]" : "translate-x-0.5"}`} />
+              </div>
+            </div>
+            <div>
+              <span className="block text-sm font-semibold text-brand-charcoal">Enable Floating Callback Button</span>
+              <span className="block text-xs text-brand-gray mt-0.5">Show the "Request a Callback" phone button across all public pages.</span>
             </div>
           </label>
         </div>

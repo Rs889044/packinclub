@@ -1,6 +1,7 @@
 {
   "favicon": "/uploads/1000028519-1775764571257.jpg",
   "enableWhatsApp": true,
+  "enableCallback": true,
   "socialLinks": {
     "facebook": "",
     "twitter": "",

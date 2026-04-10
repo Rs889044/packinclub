@@ -15,6 +15,7 @@ const testimonialsFile = path.join(dataDir, "testimonials.json");
 const defaultSettings: SiteSettings = {
   favicon: "",
   enableWhatsApp: false,
+  enableCallback: false,
   socialLinks: {
     facebook: "",
     twitter: "",

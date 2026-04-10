@@ -26,7 +26,7 @@ export default function LayoutShell({ children, settings, content }: LayoutShell
       <main>{children}</main>
       <Footer socialLinks={settings.socialLinks} contact={content.contact} />
       <WhatsAppWidget enabled={settings.enableWhatsApp} phone={content.contact.phone} />
-      <RequestCallbackWidget />
+      <RequestCallbackWidget enabled={settings.enableCallback} />
     </>
   );
 }

@@ -1,16 +1,21 @@
 "use client";
 import { useState, FormEvent, useEffect } from "react";
 
-export default function RequestCallbackWidget() {
+interface RequestCallbackWidgetProps {
+  enabled: boolean;
+}
+
+export default function RequestCallbackWidget({ enabled }: RequestCallbackWidgetProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    if (!enabled) return;
     const timer = setTimeout(() => setIsVisible(true), 1000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [enabled]);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -98,10 +103,10 @@ export default function RequestCallbackWidget() {
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`relative group flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-full shadow-lg transition-all hover:-translate-y-1 ${
+        className={`relative group flex items-center justify-center w-12 h-12 rounded-full shadow-md transition-all hover:-translate-y-0.5 ${
           isOpen
             ? "bg-brand-charcoal hover:bg-brand-gray shadow-brand-charcoal/20"
-            : "bg-brand-forest hover:bg-brand-green shadow-brand-forest/30"
+            : "bg-brand-forest hover:bg-brand-green shadow-brand-forest/25"
         }`}
         aria-label="Request a callback"
       >
@@ -110,7 +115,8 @@ export default function RequestCallbackWidget() {
         )}
         <svg
           viewBox="0 0 24 24"
-          className="w-7 h-7 md:w-8 md:h-8 text-white relative z-10"
+          className="text-white relative z-10"
+          style={{ width: 20, height: 20 }}
           fill="none"
           stroke="currentColor"
           strokeWidth={2}

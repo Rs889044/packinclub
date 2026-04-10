@@ -73,6 +73,7 @@ export interface Testimonial {
 export interface SiteSettings {
   favicon: string;
   enableWhatsApp: boolean;
+  enableCallback: boolean;
   socialLinks: {
     facebook: string;
     twitter: string;

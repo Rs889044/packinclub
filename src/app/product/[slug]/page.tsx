@@ -5,6 +5,7 @@ import { getProducts } from "@/lib/data";
 import FadeIn from "@/components/FadeIn";
 import ProductDetailsClient from "./ProductDetailsClient";
 import ProductGallery from "./ProductGallery";
+import ProductEnquiryForm from "@/components/ProductEnquiryForm";
 
 type Props = { params: { slug: string } };
 
@@ -114,6 +115,9 @@ export default function ProductPage({ params }: Props) {
                   </a>
                 </div>
               </div>
+
+              {/* Quote Request Form */}
+              <ProductEnquiryForm productName={product.name} productSlug={product.slug} />
 
               {/* Guarantees */}
               <div className="grid grid-cols-3 gap-4 text-center">

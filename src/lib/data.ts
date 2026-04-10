@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import type { Product, Blog, Contact, SiteSettings, PageContent } from "@/types";
+import type { Product, Blog, Contact, SiteSettings, PageContent, Enquiry, CallbackRequest, Testimonial } from "@/types";
 
 const dataDir = path.join(process.cwd(), "data");
 const productsFile = path.join(dataDir, "products.json");
@@ -8,6 +8,9 @@ const blogsFile = path.join(dataDir, "blogs.json");
 const contactsFile = path.join(dataDir, "contacts.json");
 const settingsFile = path.join(dataDir, "settings.json");
 const contentFile = path.join(dataDir, "content.json");
+const enquiriesFile = path.join(dataDir, "enquiries.json");
+const callbacksFile = path.join(dataDir, "callbacks.json");
+const testimonialsFile = path.join(dataDir, "testimonials.json");
 
 const defaultSettings: SiteSettings = {
   favicon: "",
@@ -80,6 +83,7 @@ function ensureDir() {
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 }
 
+// --- Products ---
 export function getProducts(): Product[] {
   if (!fs.existsSync(productsFile)) return [];
   return JSON.parse(fs.readFileSync(productsFile, "utf-8"));
@@ -90,6 +94,7 @@ export function saveProducts(products: Product[]) {
   fs.writeFileSync(productsFile, JSON.stringify(products, null, 2));
 }
 
+// --- Blogs ---
 export function getBlogs(): Blog[] {
   if (!fs.existsSync(blogsFile)) return [];
   return JSON.parse(fs.readFileSync(blogsFile, "utf-8"));
@@ -100,6 +105,7 @@ export function saveBlogs(blogs: Blog[]) {
   fs.writeFileSync(blogsFile, JSON.stringify(blogs, null, 2));
 }
 
+// --- Contacts ---
 export function getContacts(): Contact[] {
   if (!fs.existsSync(contactsFile)) return [];
   const raw = fs.readFileSync(contactsFile, "utf-8");
@@ -111,6 +117,7 @@ export function saveContacts(contacts: Contact[]) {
   fs.writeFileSync(contactsFile, JSON.stringify(contacts, null, 2));
 }
 
+// --- Settings ---
 export function getSettings(): SiteSettings {
   if (!fs.existsSync(settingsFile)) return defaultSettings;
   try {
@@ -126,6 +133,7 @@ export function saveSettings(settings: SiteSettings) {
   fs.writeFileSync(settingsFile, JSON.stringify(settings, null, 2));
 }
 
+// --- Content ---
 export function getContent(): PageContent {
   if (!fs.existsSync(contentFile)) return defaultContent;
   try {
@@ -140,3 +148,70 @@ export function saveContent(content: PageContent) {
   ensureDir();
   fs.writeFileSync(contentFile, JSON.stringify(content, null, 2));
 }
+
+// --- Enquiries ---
+export function getEnquiries(): Enquiry[] {
+  if (!fs.existsSync(enquiriesFile)) return [];
+  return JSON.parse(fs.readFileSync(enquiriesFile, "utf-8"));
+}
+
+export function saveEnquiries(enquiries: Enquiry[]) {
+  ensureDir();
+  fs.writeFileSync(enquiriesFile, JSON.stringify(enquiries, null, 2));
+}
+
+// --- Callback Requests ---
+export function getCallbacks(): CallbackRequest[] {
+  if (!fs.existsSync(callbacksFile)) return [];
+  return JSON.parse(fs.readFileSync(callbacksFile, "utf-8"));
+}
+
+export function saveCallbacks(callbacks: CallbackRequest[]) {
+  ensureDir();
+  fs.writeFileSync(callbacksFile, JSON.stringify(callbacks, null, 2));
+}
+
+// --- Testimonials ---
+export function getTestimonials(): Testimonial[] {
+  if (!fs.existsSync(testimonialsFile)) return defaultTestimonials;
+  try {
+    return JSON.parse(fs.readFileSync(testimonialsFile, "utf-8"));
+  } catch {
+    return defaultTestimonials;
+  }
+}
+
+export function saveTestimonials(testimonials: Testimonial[]) {
+  ensureDir();
+  fs.writeFileSync(testimonialsFile, JSON.stringify(testimonials, null, 2));
+}
+
+const defaultTestimonials: Testimonial[] = [
+  {
+    id: 1,
+    name: "Priya Mehta",
+    company: "GreenBox E-commerce",
+    role: "Head of Operations",
+    quote: "Switching to Packin Club's compostable mailers was one of the best decisions for our brand. Our customers love the eco-friendly packaging, and the quality is on par with conventional plastic.",
+    rating: 5,
+    visible: true,
+  },
+  {
+    id: 2,
+    name: "Rahul Kapoor",
+    company: "FreshBite Deliveries",
+    role: "Supply Chain Manager",
+    quote: "We needed food-grade compostable packaging that could handle hot and cold items. Packin Club delivered exactly what we needed — certified, durable, and affordable at scale.",
+    rating: 5,
+    visible: true,
+  },
+  {
+    id: 3,
+    name: "Anita Sharma",
+    company: "NatureGro Nurseries",
+    role: "Director",
+    quote: "The agricultural mulching films from Packin Club have been a game-changer. They decompose right into the soil after use — no cleanup needed. Truly innovative products.",
+    rating: 5,
+    visible: true,
+  },
+];

@@ -33,7 +33,41 @@ export interface Contact {
   company: string;
   interest: string;
   message?: string;
+  status: "new" | "read" | "replied" | "converted" | "closed";
   createdAt: string;
+}
+
+export interface Enquiry {
+  id: number;
+  productName: string;
+  productSlug: string;
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  quantity: string;
+  message: string;
+  status: "new" | "read" | "replied" | "quoted" | "converted" | "closed";
+  createdAt: string;
+}
+
+export interface CallbackRequest {
+  id: number;
+  phone: string;
+  preferredTime: string;
+  status: "pending" | "called" | "no-answer" | "completed";
+  createdAt: string;
+}
+
+export interface Testimonial {
+  id: number;
+  name: string;
+  company: string;
+  role: string;
+  quote: string;
+  rating: number;
+  image?: string;
+  visible: boolean;
 }
 
 export interface SiteSettings {

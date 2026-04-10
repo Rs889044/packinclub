@@ -1,28 +1,30 @@
 import { NextResponse } from "next/server";
-import { getContacts, saveContacts } from "@/lib/data";
+import { getEnquiries, saveEnquiries } from "@/lib/data";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, phone, company, interest, message } = body;
+    const { productName, productSlug, name, email, phone, company, quantity, message } = body;
 
-    if (!name || !email || !phone) {
+    if (!name || !email || !phone || !productName) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    const contacts = getContacts();
-    contacts.push({
+    const enquiries = getEnquiries();
+    enquiries.push({
       id: Date.now(),
+      productName,
+      productSlug: productSlug || "",
       name,
       email,
       phone,
       company: company || "",
-      interest: interest || "General Inquiry",
+      quantity: quantity || "",
       message: message || "",
       status: "new",
       createdAt: new Date().toISOString(),
     });
-    saveContacts(contacts);
+    saveEnquiries(enquiries);
 
     return NextResponse.json({ success: true });
   } catch {

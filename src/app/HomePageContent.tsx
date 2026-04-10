@@ -2,12 +2,13 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import FadeIn from "@/components/FadeIn";
-import type { Product, Blog, PageContent } from "@/types";
+import type { Product, Blog, PageContent, Testimonial } from "@/types";
 
 interface HomePageProps {
   content: PageContent;
   products: Product[];
   blogs: Blog[];
+  testimonials: Testimonial[];
 }
 
 function Hero({ content }: { content: PageContent["home"]["hero"] }) {
@@ -352,7 +353,62 @@ function CTA() {
   );
 }
 
-export default function HomePageContent({ content, products, blogs }: HomePageProps) {
+function Testimonials({ testimonials }: { testimonials: Testimonial[] }) {
+  const visible = testimonials.filter((t) => t.visible);
+  if (visible.length === 0) return null;
+
+  return (
+    <section className="py-20 md:py-28 bg-white border-t border-brand-pale">
+      <div className="max-w-7xl mx-auto px-5">
+        <FadeIn className="text-center max-w-2xl mx-auto mb-14">
+          <span className="text-sm font-semibold text-brand-leaf tracking-widest uppercase">Testimonials</span>
+          <h2 className="font-display text-3xl md:text-4xl font-bold text-brand-charcoal mt-3 mb-4">
+            Trusted by businesses across India
+          </h2>
+          <p className="text-brand-gray">Hear from brands that made the switch to compostable packaging.</p>
+        </FadeIn>
+        <div className="grid md:grid-cols-3 gap-8">
+          {visible.slice(0, 3).map((t, i) => (
+            <FadeIn key={t.id} delay={i * 0.1}>
+              <div className="bg-brand-cream rounded-2xl p-8 border border-brand-pale h-full flex flex-col relative">
+                <div className="absolute top-4 right-6 text-5xl text-brand-pale/80 font-display">&ldquo;</div>
+                <div className="flex gap-1 mb-4">
+                  {Array.from({ length: 5 }).map((_, si) => (
+                    <svg
+                      key={si}
+                      className={`w-4 h-4 ${si < t.rating ? "text-amber-400" : "text-brand-pale"}`}
+                      viewBox="0 0 24 24" fill="currentColor"
+                    >
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-brand-charcoal leading-relaxed mb-6 flex-1 relative z-10 italic">
+                  &ldquo;{t.quote}&rdquo;
+                </p>
+                <div className="flex items-center gap-3 mt-auto">
+                  <div className="w-11 h-11 rounded-full bg-brand-forest/10 flex items-center justify-center text-lg font-bold text-brand-forest">
+                    {t.image && t.image.startsWith("http") ? (
+                      <img src={t.image} alt={t.name} className="w-full h-full rounded-full object-cover" />
+                    ) : (
+                      t.name.charAt(0)
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-display font-semibold text-brand-charcoal text-sm">{t.name}</p>
+                    <p className="text-xs text-brand-gray">{t.role}{t.company ? `, ${t.company}` : ""}</p>
+                  </div>
+                </div>
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default function HomePageContent({ content, products, blogs, testimonials }: HomePageProps) {
   return (
     <>
       <Hero content={content.home.hero} />
@@ -360,6 +416,7 @@ export default function HomePageContent({ content, products, blogs }: HomePagePr
       <FeaturedProducts products={products} />
       <ComparisonTable />
       <WhyChoose content={content.home.whyChooseUs} />
+      <Testimonials testimonials={testimonials} />
       <ProductLifeCycle content={content.home.productLifecycle} />
       <Stats />
       <LatestBlogs blogs={blogs} />

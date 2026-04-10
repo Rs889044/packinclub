@@ -1,10 +1,11 @@
-import { getContent, getProducts, getBlogs } from "@/lib/data";
+import { getContent, getProducts, getBlogs, getTestimonials } from "@/lib/data";
 import HomePageContent from "./HomePageContent";
 
 export default function HomePage() {
   const content = getContent();
   const products = getProducts();
   const blogs = getBlogs();
+  const testimonials = getTestimonials();
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -26,7 +27,7 @@ export default function HomePage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <HomePageContent content={content} products={products} blogs={blogs} />
+      <HomePageContent content={content} products={products} blogs={blogs} testimonials={testimonials} />
     </>
   );
 }

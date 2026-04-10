@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import type { Product, Blog, Contact } from "@/types";
+import type { Product, Blog, Contact, Enquiry } from "@/types";
 
 export default function AdminDashboard() {
   const [products, setProducts] = useState<Product[]>([]);
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [contacts, setContacts] = useState<Contact[]>([]);
+  const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -14,10 +15,12 @@ export default function AdminDashboard() {
       fetch("/api/admin/products").then(r => r.json()),
       fetch("/api/admin/blogs").then(r => r.json()),
       fetch("/api/admin/contacts").then(r => r.json()),
-    ]).then(([p, b, c]) => {
+      fetch("/api/admin/enquiries").then(r => r.json()),
+    ]).then(([p, b, c, e]) => {
       setProducts(p);
       setBlogs(b);
       setContacts(c);
+      setEnquiries(e);
       setLoading(false);
     });
   }, []);
@@ -30,11 +33,14 @@ export default function AdminDashboard() {
     );
   }
 
+  const newEnquiries = enquiries.filter(e => e.status === "new").length;
+  const newContacts = contacts.filter(c => (c.status || "new") === "new").length;
+
   const stats = [
     { label: "Total Products", value: products.length, icon: "📦", color: "bg-blue-50 text-blue-600", href: "/admin/products" },
     { label: "Blog Posts", value: blogs.length, icon: "📝", color: "bg-emerald-50 text-emerald-600", href: "/admin/blogs" },
-    { label: "Contact Submissions", value: contacts.length, icon: "📬", color: "bg-amber-50 text-amber-600", href: "/admin/contacts" },
-    { label: "Featured Products", value: products.filter(p => p.featured).length, icon: "⭐", color: "bg-purple-50 text-purple-600", href: "/admin/products" },
+    { label: "Contact Leads", value: contacts.length, badge: newContacts, icon: "📬", color: "bg-amber-50 text-amber-600", href: "/admin/contacts" },
+    { label: "Product Enquiries", value: enquiries.length, badge: newEnquiries, icon: "📋", color: "bg-purple-50 text-purple-600", href: "/admin/enquiries" },
   ];
 
   const recentContacts = contacts.slice(0, 5);
@@ -55,7 +61,14 @@ export default function AdminDashboard() {
               <div className={`w-12 h-12 rounded-xl ${s.color} flex items-center justify-center text-xl mb-4`}>
                 {s.icon}
               </div>
-              <div className="font-display text-2xl md:text-3xl font-bold text-brand-charcoal">{s.value}</div>
+              <div className="flex items-center gap-2">
+                <div className="font-display text-2xl md:text-3xl font-bold text-brand-charcoal">{s.value}</div>
+                {s.badge ? (
+                  <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-700">
+                    {s.badge} new
+                  </span>
+                ) : null}
+              </div>
               <div className="text-sm text-brand-gray mt-1">{s.label}</div>
             </div>
           </Link>

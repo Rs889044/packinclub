@@ -2,14 +2,35 @@
 import { useEffect, useState } from "react";
 import type { Contact } from "@/types";
 
+const statusOptions = [
+  { value: "new", label: "New", color: "bg-blue-50 text-blue-700 border-blue-200" },
+  { value: "read", label: "Read", color: "bg-gray-50 text-gray-700 border-gray-200" },
+  { value: "replied", label: "Replied", color: "bg-yellow-50 text-yellow-700 border-yellow-200" },
+  { value: "converted", label: "Converted", color: "bg-green-50 text-green-700 border-green-200" },
+  { value: "closed", label: "Closed", color: "bg-red-50 text-red-700 border-red-200" },
+];
+
 export default function AdminContactsPage() {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<number | null>(null);
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
     fetch("/api/admin/contacts").then(r => r.json()).then(c => { setContacts(c); setLoading(false); });
   }, []);
+
+  async function updateStatus(id: number, status: string) {
+    await fetch("/api/admin/contacts", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, status }),
+    });
+    setContacts(prev => prev.map(c => c.id === id ? { ...c, status: status as Contact["status"] } : c));
+  }
+
+  const filtered = filter === "all" ? contacts : contacts.filter(c => c.status === filter);
+  const newCount = contacts.filter(c => c.status === "new").length;
 
   if (loading) {
     return (
@@ -21,16 +42,42 @@ export default function AdminContactsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-2xl md:text-3xl font-bold text-brand-charcoal">Contact Submissions</h1>
-        <p className="text-brand-gray mt-1">{contacts.length} submissions total</p>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="font-display text-2xl md:text-3xl font-bold text-brand-charcoal">
+            Contact Submissions
+            {newCount > 0 && (
+              <span className="ml-3 inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-700">
+                {newCount} new
+              </span>
+            )}
+          </h1>
+          <p className="text-brand-gray mt-1">{contacts.length} submissions total</p>
+        </div>
+        <div className="flex gap-2 flex-wrap">
+          {["all", "new", "read", "replied", "converted", "closed"].map(f => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${
+                filter === f
+                  ? "bg-brand-forest text-white"
+                  : "bg-brand-pale text-brand-gray hover:bg-brand-mint/30"
+              }`}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {contacts.length === 0 ? (
+      {filtered.length === 0 ? (
         <div className="bg-white rounded-2xl border border-brand-pale p-12 text-center">
           <div className="text-4xl mb-4">📭</div>
-          <h3 className="font-display text-lg font-semibold text-brand-charcoal mb-2">No submissions yet</h3>
-          <p className="text-sm text-brand-gray">Contact form submissions will appear here.</p>
+          <h3 className="font-display text-lg font-semibold text-brand-charcoal mb-2">No submissions found</h3>
+          <p className="text-sm text-brand-gray">
+            {filter === "all" ? "Contact form submissions will appear here." : `No ${filter} submissions.`}
+          </p>
         </div>
       ) : (
         <div className="bg-white rounded-2xl border border-brand-pale overflow-hidden">
@@ -41,26 +88,39 @@ export default function AdminContactsPage() {
                   <th className="text-left px-6 py-4 font-medium text-brand-gray">Name</th>
                   <th className="text-left px-6 py-4 font-medium text-brand-gray">Email</th>
                   <th className="text-left px-6 py-4 font-medium text-brand-gray hidden md:table-cell">Phone</th>
-                  <th className="text-left px-6 py-4 font-medium text-brand-gray hidden lg:table-cell">Company</th>
                   <th className="text-left px-6 py-4 font-medium text-brand-gray hidden lg:table-cell">Interest</th>
+                  <th className="text-left px-6 py-4 font-medium text-brand-gray">Status</th>
                   <th className="text-left px-6 py-4 font-medium text-brand-gray">Date</th>
                   <th className="px-6 py-4 font-medium text-brand-gray w-10"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-brand-pale">
-                {contacts.map((c) => (
-                  <>
+                {filtered.map((c) => (
+                  <> 
                     <tr key={c.id} className="hover:bg-brand-sand/30 transition-colors cursor-pointer" onClick={() => setExpanded(expanded === c.id ? null : c.id)}>
                       <td className="px-6 py-4 font-medium text-brand-charcoal">{c.name}</td>
                       <td className="px-6 py-4">
-                        <a href={`mailto:${c.email}`} className="text-brand-forest hover:underline">{c.email}</a>
+                        <a href={`mailto:${c.email}`} className="text-brand-forest hover:underline" onClick={e => e.stopPropagation()}>{c.email}</a>
                       </td>
                       <td className="px-6 py-4 hidden md:table-cell">
-                        <a href={`tel:${c.phone}`} className="text-brand-gray hover:text-brand-forest">{c.phone}</a>
+                        <a href={`tel:${c.phone}`} className="text-brand-gray hover:text-brand-forest" onClick={e => e.stopPropagation()}>{c.phone}</a>
                       </td>
-                      <td className="px-6 py-4 hidden lg:table-cell text-brand-gray">{c.company || "—"}</td>
                       <td className="px-6 py-4 hidden lg:table-cell">
                         <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-brand-pale text-brand-forest">{c.interest}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <select
+                          value={c.status || "new"}
+                          onChange={(e) => { e.stopPropagation(); updateStatus(c.id, e.target.value); }}
+                          onClick={(e) => e.stopPropagation()}
+                          className={`text-xs font-medium px-2.5 py-1.5 rounded-lg border outline-none cursor-pointer ${
+                            statusOptions.find(s => s.value === (c.status || "new"))?.color || "bg-gray-50 text-gray-700 border-gray-200"
+                          }`}
+                        >
+                          {statusOptions.map(s => (
+                            <option key={s.value} value={s.value}>{s.label}</option>
+                          ))}
+                        </select>
                       </td>
                       <td className="px-6 py-4 text-brand-gray text-xs">
                         {new Date(c.createdAt).toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" })}
@@ -78,6 +138,7 @@ export default function AdminContactsPage() {
                               <div><span className="text-brand-gray">Company:</span> <span className="text-brand-charcoal">{c.company || "—"}</span></div>
                               <div><span className="text-brand-gray">Interest:</span> <span className="text-brand-charcoal">{c.interest}</span></div>
                             </div>
+                            <div className="hidden md:block"><span className="text-brand-gray text-sm">Company:</span> <span className="text-brand-charcoal text-sm font-medium">{c.company || "—"}</span></div>
                             <div>
                               <p className="text-xs font-medium text-brand-gray mb-1">Message:</p>
                               <p className="text-sm text-brand-charcoal bg-white rounded-xl p-4 border border-brand-pale">
@@ -92,7 +153,6 @@ export default function AdminContactsPage() {
                               </a>
                               <a href={`https://wa.me/${c.phone.replace(/[^0-9]/g, "")}`} target="_blank" rel="noopener noreferrer"
                                 className="px-4 py-2 text-xs font-medium text-green-700 bg-green-50 rounded-lg hover:bg-green-100 transition-colors inline-flex items-center gap-1.5">
-                                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
                                 WhatsApp
                               </a>
                             </div>

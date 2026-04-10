@@ -3,6 +3,7 @@ import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import WhatsAppWidget from "./WhatsAppWidget";
+import RequestCallbackWidget from "./RequestCallbackWidget";
 import type { SiteSettings, PageContent } from "@/types";
 
 interface LayoutShellProps {
@@ -25,6 +26,7 @@ export default function LayoutShell({ children, settings, content }: LayoutShell
       <main>{children}</main>
       <Footer socialLinks={settings.socialLinks} contact={content.contact} />
       <WhatsAppWidget enabled={settings.enableWhatsApp} phone={content.contact.phone} />
+      <RequestCallbackWidget />
     </>
   );
 }

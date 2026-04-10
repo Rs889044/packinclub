@@ -1,46 +1,29 @@
 "use client";
 import { useEffect, useState } from "react";
 
-export default function WhatsAppWidget() {
+interface WhatsAppWidgetProps {
+  enabled: boolean;
+  phone: string;
+}
+
+export default function WhatsAppWidget({ enabled, phone }: WhatsAppWidgetProps) {
   const [isVisible, setIsVisible] = useState(false);
-  const [phone, setPhone] = useState("918178414360");
+  const phoneClean = phone.replace(/\D/g, "");
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-    
-    // Fetch Settings for visibility toggle
-    fetch("/api/admin/settings")
-      .then(res => res.json())
-      .then(data => {
-        if (data.enableWhatsApp) {
-          timer = setTimeout(() => setIsVisible(true), 500);
-        }
-      })
-      .catch(() => {});
-      
-    // Fetch Content for dynamic phone number
-    fetch("/api/admin/content")
-      .then(res => res.json())
-      .then(data => {
-        if (data?.contact?.phone) {
-          setPhone(data.contact.phone.replace(/\D/g, ""));
-        }
-      })
-      .catch(() => {});
-      
-    return () => {
-      if (timer) clearTimeout(timer);
-    };
-  }, []);
+    if (!enabled) return;
+    const timer = setTimeout(() => setIsVisible(true), 500);
+    return () => clearTimeout(timer);
+  }, [enabled]);
 
   return (
     <div 
       className={`fixed bottom-6 right-6 z-50 transition-all duration-500 transform ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8 pointer-events-none"
       }`}
     >
       <a
-        href={`https://wa.me/${phone}?text=Hi!%20I%20visited%20Packin%20Club%20and%20I%20have%20an%20enquiry.`}
+        href={`https://wa.me/${phoneClean}?text=Hi!%20I%20visited%20Packin%20Club%20and%20I%20have%20an%20enquiry.`}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat with us on WhatsApp"

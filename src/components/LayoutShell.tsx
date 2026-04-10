@@ -3,8 +3,15 @@ import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import WhatsAppWidget from "./WhatsAppWidget";
+import type { SiteSettings, PageContent } from "@/types";
 
-export default function LayoutShell({ children }: { children: React.ReactNode }) {
+interface LayoutShellProps {
+  children: React.ReactNode;
+  settings: SiteSettings;
+  content: PageContent;
+}
+
+export default function LayoutShell({ children, settings, content }: LayoutShellProps) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
 
@@ -16,8 +23,8 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
     <>
       <Navbar />
       <main>{children}</main>
-      <Footer />
-      <WhatsAppWidget />
+      <Footer socialLinks={settings.socialLinks} contact={content.contact} />
+      <WhatsAppWidget enabled={settings.enableWhatsApp} phone={content.contact.phone} />
     </>
   );
 }

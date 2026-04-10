@@ -51,8 +51,34 @@ export default async function BlogPostPage({ params }: Props) {
     "Inside Packin": "bg-amber-50 text-amber-700",
   };
 
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": post.title,
+    "description": post.excerpt,
+    "author": {
+      "@type": "Person",
+      "name": post.author,
+    },
+    "datePublished": post.date,
+    "publisher": {
+      "@type": "Organization",
+      "name": "Packin Club",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://packinclub.com/images/logo.png",
+      },
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://packinclub.com/blog/${slug}`,
+    },
+    ...(post.thumbnail ? { "image": post.thumbnail } : {}),
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <section className="pt-28 pb-12 md:pt-36 md:pb-16 bg-gradient-to-b from-brand-cream to-white relative overflow-hidden">
         <div className="absolute top-10 right-20 w-64 h-64 rounded-full bg-brand-mint/15 blur-3xl" />
         <div className="max-w-4xl mx-auto px-5 relative z-10">

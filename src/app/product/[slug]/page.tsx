@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { getProducts } from "@/lib/data";
 import FadeIn from "@/components/FadeIn";
 import ProductDetailsClient from "./ProductDetailsClient";
@@ -234,7 +235,7 @@ export default function ProductPage({ params }: Props) {
                   <Link href={`/product/${p.slug}`} className="group block bg-white rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-brand-forest/5 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col border border-brand-pale">
                     <div className="aspect-square bg-brand-pale flex items-center justify-center relative overflow-hidden p-6">
                       {p.image ? (
-                        <img src={p.image} alt={p.name} className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500" />
+                        <Image src={p.image} alt={p.name} fill className="object-cover rounded-xl group-hover:scale-105 transition-transform duration-500" />
                       ) : (
                         <span className="text-5xl group-hover:scale-110 transition-transform duration-500">📦</span>
                       )}

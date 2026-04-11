@@ -2,6 +2,7 @@
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 const categories = ["Retail Packaging", "Industrial Packaging", "Agriculture & Nursery", "Bags on Roll"];
 
@@ -23,6 +24,7 @@ export default function NewProductPage() {
   const [applications, setApplications] = useState("");
   const [faqs, setFaqs] = useState<{question: string, answer: string}[]>([]);
   const [gallery, setGallery] = useState<string[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [uploadingGallery, setUploadingGallery] = useState(false);
 
   function updateField(field: string, value: string | boolean) {
@@ -47,6 +49,7 @@ export default function NewProductPage() {
     setUploading(false);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function handleGalleryUpload(file: File) {
     if (gallery.length >= 4) return;
     setUploadingGallery(true);
@@ -220,7 +223,7 @@ export default function NewProductPage() {
             <label className="block text-sm font-medium text-brand-charcoal mb-2">Product Image</label>
             {imageUrl ? (
               <div className="relative w-40 h-40 rounded-xl overflow-hidden border border-brand-pale">
-                <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
+                <Image src={imageUrl} alt="Preview" fill className="object-cover" />
                 <button
                   type="button"
                   onClick={() => setImageUrl("")}
@@ -266,7 +269,7 @@ export default function NewProductPage() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 mb-6">
               {gallery.map((url, idx) => (
                 <div key={idx} className="relative aspect-square rounded-xl overflow-hidden border border-brand-pale bg-brand-sand/50">
-                  <img src={url} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover" />
+                  <Image src={url} alt={`Gallery ${idx + 1}`} fill className="object-cover" />
                   <button type="button" onClick={() => setGallery(gallery.filter((_, i) => i !== idx))}
                     className="absolute top-2 right-2 w-6 h-6 bg-red-500/90 hover:bg-red-600 text-white rounded-full text-xs flex items-center justify-center shadow-sm backdrop-blur-sm">✕</button>
                 </div>

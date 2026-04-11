@@ -152,7 +152,7 @@ export default function SettingsPage() {
             </div>
             <div>
               <span className="block text-sm font-semibold text-brand-charcoal">Enable Floating Callback Button</span>
-              <span className="block text-xs text-brand-gray mt-0.5">Show the "Request a Callback" phone button across all public pages.</span>
+              <span className="block text-xs text-brand-gray mt-0.5">Show the &quot;Request a Callback&quot; phone button across all public pages.</span>
             </div>
           </label>
         </div>

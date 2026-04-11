@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import FadeIn from "@/components/FadeIn";
 import type { Product } from "@/types";
 
@@ -88,7 +89,7 @@ export default function ProductsClient({ products, catalogPdf, heroTitle, heroDe
                   <Link href={`/product/${p.slug}`} className="group bg-brand-cream rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-brand-forest/5 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col block">
                     <div className="aspect-square bg-gradient-to-br from-brand-pale via-brand-mint/20 to-brand-leaf/10 flex items-center justify-center relative overflow-hidden">
                       {p.image ? (
-                        <img src={p.image} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        <Image src={p.image} alt={p.name} fill className="object-cover group-hover:scale-105 transition-transform duration-300" />
                       ) : (
                         <span className="text-5xl group-hover:scale-110 transition-transform duration-300">
                           {categoryIcons[p.category] || "📦"}

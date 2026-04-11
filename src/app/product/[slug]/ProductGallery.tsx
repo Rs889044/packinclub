@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 interface ProductGalleryProps {
   image?: string;
@@ -51,7 +52,7 @@ export default function ProductGallery({ image, gallery = [], name }: ProductGal
                 activeIdx === idx ? "border-brand-forest shadow-md" : "border-brand-pale hover:border-brand-forest/40 opacity-70 hover:opacity-100"
               }`}
             >
-              <img src={src} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+              <Image src={src} alt={`Thumbnail ${idx + 1}`} fill className="object-cover" />
             </button>
           ))}
         </div>
